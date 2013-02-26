@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tonehack</title>
+        <meta charset='utf-8' />
+        <!-- libs -->
+        <script type='text/javascript' src='jquery.min.js'></script>
+        <script type='text/javascript' src='require.min.js'></script>
+
+        <!-- hand-written js -->
+        <script type='text/javascript' src='draw.js'></script>
+        <script type='text/javascript' src='animframe.js'></script>
+        <script type='text/javascript' src='sound.js'></script>
+        <script type='text/javascript' src='waves.js'></script>
+        <script type='text/javascript' src='ui.js'></script>
+
+        <!-- default waves to load -->
+        <script type='text/javascript'>
+            presets = {};
+            presets['Pure tone'] = [{'freq': 220, 'duration': 1000, 'volume_envelope': [1]}];
+            presets['Resonant'] = [
+                {'freq': 220, 'duration': 1000, 'volume_envelope': [1]},
+                {'freq': 440, 'duration': 1000, 'volume_envelope': [1]},
+                {'freq': 660, 'duration': 1000, 'volume_envelope': [1]},
+                {'freq': 880, 'duration': 1000, 'volume_envelope': [1]},
+            ];
+        </script>
+        <script type='text/javascript' src='presets/guitar.js'></script>
+        <script type='text/javascript' src='presets/fake_string.js'></script>
+
+        <link href="icons/css/font-awesome.css" rel="stylesheet" type="text/css" />
+        <link href="style.css" rel="stylesheet" type="text/css" />
+        <link href="article.css" rel="stylesheet" type="text/css" />
+        <script type='text/javascript'>
+
+            $(document).ready(function() {
+                var options = {details: false, scale: 0.5, audio_context: new webkitAudioContext() };
+                var simple_string = new waveCanvas($('#simple-string'), presets['Pure tone']).init(options);
+                var resonant_string = new waveCanvas($('#resonant-string'), presets['Resonant']).init(options);
+                var decaying_overtones = new waveCanvas($('#decaying-overtones'), presets['Fake string']).init(options)
+                var individually_decaying_overtones = new waveCanvas($('#individually-decaying-overtones'), presets['Guitar']).init(options)
+                
+                simple_string.setLabel('A hypothetical string vibrating at a single, constant frequency');
+                resonant_string.setLabel('Combining the vibrations of the first four overtones');
+                decaying_overtones.setLabel('First four overtones, now with attack and decay');
+                individually_decaying_overtones.setLabel('Each overtone starts at a different volume,<br />and decays at a different rate.');
+            });
+
+        </script>
+    </head>
+    <body>
+        <div class='container'>
+            <h1>tonehack<span> &lt;</span></h1>
+            <h2>timbres from scratch<span class='lt'> &lt;</span></h2>
+
+            <div id='article'>
+                <p>
+                    This <strong>interactive</strong> article will explain and demonstrate:
+                    <ul>
+                        <li>What timbre really is (a.k.a texture of a sound; the thing that makes you distinguish between a violin and a guitar).</li>
+                        <li>Why certain timbres sound more pleasant than others.</li>
+                        <li>How the basis of timbre is also the basis of chords (i.e. major, minor, etc.).</li>
+                        <li>Why certain chords sound more pleasant than others.</li>
+                        <li>Creating timbres from scratch. Make your very own instrument on tonehack.</li>
+                    </ul>
+                </p>
+                <span class='box-title'>Part 1: Plucking a string</span>
+                <div class='box'>
+                    <h3>Creating a pure tone with a simplified string model</h3>
+                    <p>A tight string that is fixed at both ends vibrates when plucked.</p>
+                    
+                    <p>Below is a simplified, imaginary string. Let's assume that our simplified string wobbles up and down continuously when plucked, at a constant rate.</p>
+                    <div id='simple-string' class='string' style='float: left;'></div>
+                    <div style='float: left; width: 500px; margin-left: 20px;'>
+                        <p>The resulting vibration that this up-down motion produces is a sine wave. For this particular example, the frequency of the sound is set to 220Hz.</p>
+                        <p>Hit the "pluck" button. If such a string could exist in the physical world, this is what you would actually hear. A pure 220Hz sine wave, in sound form.</p>
+                    </div>
+                    <div class='clear'></div>
+                    <p>Coming across pure tones in the physical world is extremely rare. In terms of non-electric sound sources, <a href='http://en.wikipedia.org/wiki/Tuning_fork'>tuning forks</a> are as close as we can get to pure tones.</p>
+                    
+                    <h3>Overtones (or <a href='http://en.wikipedia.org/wiki/Resonance'>resonant frequencies</a>)</h3>
+                    <p>The reason a string wobbles up and down in repetitive motion is because as the string stretches one way, the tension that is building up gets released in the opposite way at equal speed, therefore mirroring its previous motion. In this sense, it can be thought of as self-perpetuating motion.</p>
+                    <p>The energy levels at which the string achieves self-perpetuating vibrations are called the <strong>resonant frequencies</strong>. For strings, the resonant frequency depends on things such as the material or its tightness.</p>
+                    <p>A string can have many resonant frequencies. When the strings are tied at both ends, the motion that is mirroring itself needs to have fixed nodes at exactly those points. </p>
+                    <p>The example below demonstrates the first few resonant wave patterns (a.k.a overtones) of a string. <span class='tip'>(Hit the pluck button)</span></p>
+                    
+                    <div id='resonant-string' class='string' style='width: 500px; float: left;'></div>
+                    <div style='float: left; width: 400px; margin-left: 20px;'>
+                        <p>What you hear is a combination of the first four overtones at equal volume.</p>
+                        <p>If you look at the wavelengths, you will note that each overtone is an integer multiple of the first overtone (2, 3, 4, ...) So if the first overtone was vibrating at 110Hz (meaning 110 up-down motions per second), then the rest would continue as 220Hz, 330Hz, 440Hz, etc.</p>
+                        <p>Click the "resulting vibration" tab to see how their combination would actually make the string look, if they all took place at the same time.</p>
+                    </div>
+                    <div class='clear'></div>
+
+                    <h3>Attack and Decay</h3>
+                    <p>A physical string loses energy as it vibrates, which leads to decay of volume. The first moment when a string is plucked is when it has the strongest vibrations, and then the volume quickly falls to a fraction of the initial strength. Then it decays slowly for a few seconds until it dies out. This is called the <strong>attack</strong> and the <strong>decay</strong>.</p>
+                    <p>The example below has attack and decay, which you can follow visually with the wave animations.</p>
+                    
+                    <div id='decaying-overtones' class='string' style='width: 500px; float: left;'></div>
+                    <div style='float: left; width: 400px; margin-left: 20px;'>
+                        <p>As you can hear, the attack and decay makes the sound feel a little bit less digital, little more realistic. I feel like this sounds more like a dull bell.</p>
+                        <p>One important feature to note is that each overtone can decay at different speeds and patterns. For example with a guitar string, higher overtones die out much faster than lower overtones. This is demonstrated in the next example.</p>
+                    </div>
+                    <div class='clear'></div>
+                    <p>To add more realism, we will also need to add more overtones, since theoretically we could have an infinite number of resonant frequencies, which are getting quieter and quieter as the frequency keeps increasing.</p>
+                    
+                    <div id='individually-decaying-overtones' class='string' style='width: 500px; float: left;'></div>
+                    <div style='float: left; width: 400px; margin-left: 20px;'>
+                        <p>Now it's starting to sound more like a real string being plucked.</p>
+                    </div>
+                    <div class='clear'></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

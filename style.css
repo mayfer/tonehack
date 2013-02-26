@@ -1,0 +1,76 @@
+html, body { margin: 0; padding: 0; background: rgba(63, 60, 60, 1); color: #fff; font-family: courier, courier new, monaco, monospace; }
+
+#tonehack { overflow: auto; }
+#presets { width: 175px; float: left; margin-right: 5px; }
+#overtones { width: 816px; float: left; }
+
+#presets h3 { margin: 0; line-height: 26px; }
+#presets .preset { display: block; padding: 10px; background: rgba(255,255,255,0.8); border-top: 1px solid #fff; border-bottom: 1px solid #aaa; border-left: 1px solid #fff; border-right: 1px solid #aaa; border-radius: 2px; }
+
+.container { width: 1000px; margin: 0 auto; position: relative; }
+.wave-canvas { position: relative; width: 100%; margin-bottom: 25px; }
+.parent-canvas { display: block; width: 100%; margin: 0 auto; border: 1px solid #fff; background: #fff; border-radius: 2px; z-index: 10; position: relative; }
+.parent-canvas > canvas { position: absolute; top: 0; left: 0; }
+.waves { height: 100%; width: 75%; margin-left: 25%; }
+.adsr { height: 100%; width: 25%; margin-right: 80%; background: #ddd; position: relative; }
+            
+a { color: #a50; text-decoration: none; border-bottom: 1px solid #ff8000; }
+a:hover { color: #05a; border-bottom: 1px solid #08f; }
+            
+.controls { font-size: 14px; }
+.controls a:hover { color: #fff; border-color: #fff; position: relative; top: -1px; }
+.controls a { display: inline-block; min-width: 15px; text-align: center; margin-right: 10px; margin-bottom: 0px; padding: 3px 5px; border-top-right-radius: 2px; border-top-left-radius: 2px; color: #ccc; border-bottom: 3px solid #ccc; display: inline-block; text-decoration: none;}
+.controls a.tab { float: right; margin-right: 20px;  background: #ddd; position: relative; z-index: 1000; border: 2px solid #888; border-bottom: 1px solid #888; padding: 3px 15px; color: #000; z-index: 5; }
+.controls a.tab:hover { top: 0; }
+.controls a.tab.selected { float: right; margin-right: 20px;  background: #fff; border: 2px solid #ddd; border-bottom: 3px solid #fff; margin-bottom: -3px; color: #000; }
+
+.labels { position: relative; }
+
+.adsr-title { position: absolute; top: 10px; left: 20px; color: #000; font-size: 12px; line-height: 12px; }
+.adsr-title .tip { font-size: 10px; color: #444; }
+.adsr-link, .adsr-link:hover { display: block; position: absolute; border-bottom: 2px solid #555; border-left: 2px solid #555; background: #eee; }
+.adsr-link:hover { background: #fff; }
+.adsr-link .freq { position: absolute; top: 5px; right: 5px; color: #000; font-size: 11px; text-shadow: 1px 0 0 #fff, 0 1px 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff; }
+
+.adsr-link canvas { position: absolute; top: 0; left: 0; }
+            
+.add-tone { position: absolute; bottom: 15px; right: 15px; font-size: 12px; }
+
+.duration { margin-left: 20px; font-size: 14px; color: rgba(255,255,255,0.8); }
+input.duration, .duration input { width: 50px; background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.3); margin: 0 2px; padding: 2px 3px; text-align: right; color: #333; }
+.duration input:focus { background: #fff; }
+
+.modal-adsr { position: absolute; top: 0; left: 0;border: 2px solid #888; background: #fff; box-shadow: 0 0 30px 0 rgba(0, 0, 0, 0.8); width: 90%; margin: 40px 5%; z-index: 1000; }
+.modal-adsr .title { height: 30px; background: #eee; width: 100%; }
+.modal-adsr .actions { height: 37px; background: #eee; width: 100%; border-top: 3px solid #ddd; }
+.modal-adsr h3 { line-height: 30px; margin: 0 0 0 15px; padding: 0; color: #444; font-size: 16px; }
+.modal-adsr .close { float: right; font-size: 14px; line-height: 30px; border: none; color: #555; padding: 0 20px; display: inline-block; background: rgba(255,255,255,0.3); }
+.modal-adsr .close:hover { background: rgba(255,200,200,0.3); color: #a00; }
+.modal-adsr .save { display: block; height: 37px; line-height: 37px; padding: 0 25px; background: rgba(255, 200, 155, 0.7); border: none; float: right; font-weight: bold; color: #a50; cursor: pointer; font-size: 14px; }
+.modal-adsr .save:hover { color: #05a; background: #fff; }
+.modal-adsr .actions a { line-height: 37px; margin-left: 15px; font-size: 14px; }
+.modal-adsr .freq { font-size: 18px; }
+
+.draw-adsr{ margin: 35px 0 30px 30px; border-bottom: 1px solid #000; border-left: 1px solid #000; cursor: crosshair; background: #f6f6f6 url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==) bottom left; position: relative; height: 284px; }
+
+.drawing-canvas { position: absolute; top: 0; left: 0; opacity: 0.5; }
+.drawing-canvas.active { z-index: 100; opacity: 1; }
+
+.draw-mode { z-index: 200; position: absolute; top: 30px; left: 50%; width: 300px; margin-left: -150px; border-radius: 5px; line-height: 30px; text-align: center; }
+.draw-mode a { background: #fff; color: #aaa; display: inline-block; width: 150px; border-radius: 5px; border-bottom: 2px solid #aaa; }
+.draw-mode a.volume.selected, .draw-mode a.volume:hover { color: #aa6000; border-bottom: 2px solid #aa6000; }
+.draw-mode a.freq.selected, .draw-mode a.freq:hover { color: #00aa00; border-bottom: 2px solid #00aa00; }
+
+.graph-label { color: #000; z-index: 10000; display: block; position: absolute; }
+.graph-label.y { -webkit-transform: rotate(-90deg); width: 100px; left: -65px; top: 45%; }
+.graph-label.y-min { -webkit-transform: rotate(-90deg); width: 100px; left: -65px; bottom: 40px; }
+.graph-label.y-max { -webkit-transform: rotate(-90deg); width: 100px; left: -65px; top: -20px; }
+.graph-label.x { left: 45%; bottom: -25px; }
+.graph-label.x-min { left: 20px; bottom: -25px; }
+.graph-label.x-max { right: 20px; bottom: -25px; }
+
+h1, h2 { padding: 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FF8000, 0 0 70px #FF8000, 0 0 80px #FF8000, 0 0 100px #FF8000, 0 0 150px #FF8000; color: #fff; }
+h1 { margin: 40px 0 10px 0; font-size: 25px; line-height: 28px; text-align: right; }
+h2 { font-size: 16px; line-height: 20px; margin-bottom: 40px; text-align: right; }
+h2 span.lt { font-size: 25px; }
+

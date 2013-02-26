@@ -1,0 +1,31 @@
+#piano { overflow: auto; color: #000; }
+
+#vpcf_container{
+	margin: 0 auto;
+	position: relative;
+	z-index: 100;
+}
+.vpcf_white_key{
+	background-color: #FFF;
+	position: absolute;
+	border: 1px solid #d5d5d5;
+	z-index: 300;
+}
+.vpcf_white_key:hover{
+	background-color: #eef;
+}
+.vpcf_black_key{
+	border: 1px solid #d5d5d5;
+	background-color: #000;
+	position: absolute;
+	z-index: 400;
+	box-shadow: 1px 1px 3px #bbbbbb; 
+}
+.vpcf_black_key:hover{
+	background-color: #448;
+}
+.vpcf_clear{
+	clear: both;
+}
+
+.note { cursor: pointer; }

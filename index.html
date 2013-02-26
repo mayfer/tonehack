@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tonehack</title>
+        <meta charset='utf-8' />
+        <!-- libs -->
+        <script type='text/javascript' src='jquery.min.js'></script>
+        <script type='text/javascript' src='require.min.js'></script>
+        <script type='text/javascript' src='piano.js'></script>
+
+        <!-- hand-written js -->
+        <script type='text/javascript' src='draw.js'></script>
+        <script type='text/javascript' src='animframe.js'></script>
+        <script type='text/javascript' src='sound.js'></script>
+        <script type='text/javascript' src='waves.js'></script>
+        <script type='text/javascript' src='ui.js'></script>
+
+        <!-- default waves to load -->
+        <script type='text/javascript'>
+            presets = {};
+            presets['Pure tone'] = [{'freq': 220, 'duration': 1000, 'audio_amplitude': 1,}];
+        </script>
+        <script type='text/javascript' src='presets/guitar.js'></script>
+
+        <link href="icons/css/font-awesome.css" rel="stylesheet" type="text/css" />
+        <link href="style.css" rel="stylesheet" type="text/css" />
+        <link href="piano.css" rel="stylesheet" type="text/css" />
+        <script type='text/javascript'>
+
+            $(document).ready(function() {
+                var overtones;
+                if(window.localStorage['waves']) {
+                    overtones = JSON.parse(window.localStorage['waves']);
+                } else {
+                    overtones = presets['Pure tone'];
+                }
+                var canvas_overtones = new waveCanvas($('#overtones'), overtones).init();
+
+                // load the other presets asynchronously
+                var preset_paths = [
+                    "presets/violin.js",
+                    "presets/clarinet.js",
+                    "presets/drum.js",
+                    "presets/rhythmic_synth.js",
+                ];
+                require(preset_paths, function() {
+                    var presets_div = $('#presets');
+                    $.each(presets, function(key, preset){
+                        $('<a>').attr('href', '#').addClass('preset').html(key).appendTo(presets_div).on('click', function(e){
+                            e.preventDefault();
+                            canvas_overtones.stop();
+                            canvas_overtones.loadPreset(preset);
+                        });
+                    });
+                });
+
+                $('#piano').piano({
+                    number_of_keys: 50,
+                });
+
+            });
+
+        </script>
+    </head>
+    <body>
+        <div class='container'>
+            <h1>tonehack<span> &lt;</span></h1>
+            <h2>timbres from scratch<span class='lt'> &lt;</span></h2>
+
+            <div id='tonehack'>
+                <div id='presets'>
+                    <h3>Presets</h3>
+                </div>
+                <div id='overtones' class='wave-canvas'> </div>
+            </div>
+            <div id='piano'> </div>
+            
+            <div id='article'>
+                <p>
+                    <strong>Usage:</strong>
+                    <ul>
+                        <li>Brown line is the Volume Envelope</li>
+                        <li>Green line is the Pitch bend (frequency shifting)</li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    </body>
+</html>
