@@ -29,3 +29,4 @@
 }
 
 .note { cursor: pointer; }
+.playing, .playing:hover { background: #f00; }

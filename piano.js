@@ -36,12 +36,14 @@ function toneMath() {
 
         return (note_shift + octave_shift + flat_sharp_shift)
     };
+    return this;
 }
 
 
 (function( $ ) {
   $.fn.piano = function(options) {
 	var containing_div = this;
+    var tonemath = toneMath();
 	
 	var settings = $.extend( {
       number_of_keys : 35, // cannot exceed 83 nor be less than 35
@@ -121,6 +123,7 @@ function toneMath() {
 		    	white_key_position = white_key_position + key_width;
 		    	white_key_counter++;
 		    }
+            key_jq.data('freq', tonemath.relative_note(32.703, key+1));
             $('#vpcf_container').append(key_jq);
 		}
 		

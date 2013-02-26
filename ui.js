@@ -492,6 +492,18 @@ function waveCanvas(jq_elem, freqs) {
     this.setLabel = function(label) {
         jq_elem.append($('<div>').addClass('label').html(label));
     };
+
+    this.playNote = function(note_freq) {
+        var base_freq = waves[0].freq;
+        var multiplier = note_freq / base_freq;
+        var adjusted_waves = waves;
+        for(var i=0; i<adjusted_waves.length; i++) {
+            adjusted_waves[i].freq = waves[i].freq * multiplier;
+        }
+        var notewave = new soundWave(audio_context, adjusted_waves);
+        notewave.play();
+        return notewave;
+    }
 }
         
 $(document).ready(function(){

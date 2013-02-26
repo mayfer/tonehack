@@ -58,6 +58,19 @@
                     number_of_keys: 50,
                 });
 
+                $('#piano').on('click', '.note', function(e){
+                    e.preventDefault();
+                    var key = $(this);
+                    if(!key.hasClass('playing')) {
+                        key.addClass('playing');
+                        var soundwave = canvas_overtones.playNote(key.data('freq'));
+                        key.data('soundwave', soundwave);
+                    } else {
+                        key.removeClass('playing');
+                        key.data('soundwave').pause();
+                        key.data('soundwave', null);
+                    }
+                });
             });
 
         </script>
