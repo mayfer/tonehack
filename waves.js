@@ -74,7 +74,7 @@ function standingWave(context, options) {
     };
     this.getPlotCoordinates = function(time_diff) {
         step = speed * time_diff * (Math.PI/20) * relative_freq % Math.PI*2;
-        var volume_envelope_amplitude = this.currentEnvelopeValue(time_diff / this.duration, this.volume_envelope);
+        var volume_envelope_amplitude = this.currentEnvelopeValue(time_diff / this.duration);
         var current_relative_freq = this.currentPitchBend(time_diff / this.duration) * relative_freq;
         
         current_amplitude = Math.sin(step + phase) * amplitude * volume_envelope_amplitude * 2;
@@ -95,31 +95,75 @@ function standingWave(context, options) {
         }
         return points;
     };
-    this.currentEnvelopeValue = function(percent_progress, envelope) {
-        var decimal_index = envelope.length * percent_progress;
-        var index = Math.floor(decimal_index);
+    this.currentEnvelopeValue = function(percent_progress) {
+        var envelope = this.volume_envelope;
+        var raw_decimal_index = envelope.length * percent_progress;
+        var raw_index = Math.floor(raw_decimal_index);
+        var index, decimal_index;
+        
         if(true) { // envelope_options.repeat) {
-            index = index % envelope.length;
-            decimal_index = decimal_index % envelope.length;
+            index = raw_index % envelope.length;
+            decimal_index = raw_decimal_index % envelope.length;
         } else {
-            index = Math.min(envelope.length-1, index);
-            decimal_index = Math.min(envelope.length-1, decimal_index);
+            index = Math.min(envelope.length-1, raw_index);
+            decimal_index = Math.min(envelope.length-1, raw_decimal_index);
         }
-        var value;
+        var value, current_val, next_val;
         
         // if possible, pick the volume_envelope value from a linear interpolation between indeces.
         // this should prevent popping/crackling
-        if(index < envelope.length-1) {
-            value = envelope[index] + (decimal_index - index) * (envelope[index+1] - envelope[index]);
-        } else if(index >= envelope.length-1) {
-            value = envelope[envelope.length-1];
+        if(index <= envelope.length-1) {
+            if(raw_index == 0 && envelope.length > 1) {
+                // this indicates that the sound just started playing.
+                // initial value has no linear interpolation to do, so we force interpolate from zero
+                current_val = 0;
+                next_val = envelope[index+1];
+            } else if(index == envelope.length-1) {
+                current_val = envelope[index];
+                next_val = envelope[0];
+            } else {
+                current_val = envelope[index];
+                next_val = envelope[index+1];
+            }
+        
+            value = current_val + (decimal_index - index) * (next_val - current_val);
         } else {
-            value = envelope[index];
+            // just in case index goes wild
+            value = envelope[envelope.length-1];
         }
         return value;
     };
     this.currentPitchBend = function(percent_progress) {
-        var pitch_bend = (this.currentEnvelopeValue(percent_progress, this.freq_envelope)*2);
+        var envelope = this.freq_envelope;
+        var raw_decimal_index = envelope.length * percent_progress;
+        var raw_index = Math.floor(raw_decimal_index);
+        
+        if(true) { // envelope_options.repeat) {
+            index = raw_index % envelope.length;
+            decimal_index = raw_decimal_index % envelope.length;
+        } else {
+            index = Math.min(envelope.length-1, raw_index);
+            decimal_index = Math.min(envelope.length-1, raw_decimal_index);
+        }
+        var value, current_val, next_val;
+        
+        // if possible, pick the volume_envelope value from a linear interpolation between indeces.
+        // this should make pitch bend smooth
+        if(index <= envelope.length-1) {
+            if(index == envelope.length-1) {
+                current_val = envelope[index];
+                next_val = envelope[0];
+            } else {
+                current_val = envelope[index];
+                next_val = envelope[index+1];
+            }
+        
+            value = current_val + (decimal_index - index) * (next_val - current_val);
+        } else {
+            // just in case index goes wild
+            value = envelope[envelope.length-1];
+        }
+        var pitch_bend = (value*2);
         return pitch_bend;
     }
     this.draw = function(time_diff) {
