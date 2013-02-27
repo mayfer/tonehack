@@ -496,9 +496,16 @@ function waveCanvas(jq_elem, freqs) {
     this.playNote = function(note_freq) {
         var base_freq = waves[0].freq;
         var multiplier = note_freq / base_freq;
-        var adjusted_waves = waves;
-        for(var i=0; i<adjusted_waves.length; i++) {
-            adjusted_waves[i].freq = waves[i].freq * multiplier;
+        var adjusted_waves = [];
+        for(var i=0; i<waves.length; i++) {
+            // deep copy of the waves only seems to work this way
+            var wave = new standingWave(waves_context, {
+                freq: waves[i]['freq'] * multiplier,
+                volume_envelope: waves[i]['volume_envelope'],
+                freq_envelope: waves[i]['freq_envelope'],
+                duration: waves[i]['duration'],
+            })
+            adjusted_waves.push(wave);
         }
         var notewave = new soundWave(audio_context, adjusted_waves);
         notewave.play();
