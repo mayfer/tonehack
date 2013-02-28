@@ -6,15 +6,15 @@
         <!-- libs -->
         <script type='text/javascript' src='jquery.min.js'></script>
         <script type='text/javascript' src='require.min.js'></script>
-        <script type='text/javascript' src='piano.js'></script>
 
         <!-- hand-written js -->
-        <script type='text/javascript' src='generic.js'></script>
         <script type='text/javascript' src='draw.js'></script>
         <script type='text/javascript' src='animframe.js'></script>
         <script type='text/javascript' src='sound.js'></script>
         <script type='text/javascript' src='waves.js'></script>
         <script type='text/javascript' src='ui.js'></script>
+        <script type='text/javascript' src='notes.js'></script>
+        <script type='text/javascript' src='piano.js'></script>
 
         <!-- default waves to load -->
         <script type='text/javascript'>
@@ -56,7 +56,8 @@
                 });
 
                 $('#piano').piano({
-                    number_of_keys: 50,
+                    number_of_keys: 55,
+                    keyboard_play: true,
                 });
 
                 $('#piano').on('click', '.note', function(e){
@@ -91,7 +92,7 @@
             
             <div id='article'>
                 <p>
-                    <strong>Usage:</strong>
+                    <strong>F.E.C. (Frequently Encountered Confusions):</strong>
                     <ul>
                         <li>Brown line is the Volume Envelope</li>
                         <li>Green line is the Pitch bend (frequency shifting)</li>

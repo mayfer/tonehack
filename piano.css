@@ -29,4 +29,5 @@
 }
 
 .note { cursor: pointer; }
-.playing, .playing:hover { background: #f00; }
+.playing, .playing:hover { background: #fa0; }
+.keyboard-label { position: absolute; bottom: 4px; left: 0; color: #aaa; width: 100%; text-align: center; }

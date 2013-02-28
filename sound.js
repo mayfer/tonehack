@@ -11,6 +11,7 @@ soundWave = function(context, standing_waves) {
     this.sampleRate = this.context.sampleRate; // 44100 by default
     this.sampleRateMillisecond = this.sampleRate / 1000;
     this.playing = false;
+    this.fadeout_counter = 0;
 
     this.standing_waves = standing_waves;
 
@@ -18,7 +19,7 @@ soundWave = function(context, standing_waves) {
         this.xs[j] = 0;
     }
 
-    this.node = context.createJavaScriptNode(4096, 0, 2);
+    this.node = context.createJavaScriptNode(1024, 0, 2);
 
     var that = this;
     this.node.onaudioprocess = function(e) { that.process(e) };
