@@ -60,6 +60,18 @@ soundWave.prototype.process = function(e) {
             this.xs[j] += Math.PI * 2 * current_freq / this.sampleRate;
             
             cumulative_amplitude += (current_amplitude * y) / num_standing_waves;
+            
+        }
+        if(!this.playing) {
+            // fadeout to prevent popping during a pause/stop
+            var fadeout_length = 10000;
+            cumulative_amplitude -= cumulative_amplitude * (this.fadeout_counter++/fadeout_length)
+            if(this.fadeout_counter >= fadeout_length) {
+                this.counter = 0;
+                this.fadeout_counter = 0;
+                this.node.disconnect();
+                break;
+            }
         }
         for(var k = 0; k < num_channels; k++) {
             channels[k][i] = cumulative_amplitude;
@@ -74,7 +86,5 @@ soundWave.prototype.play = function() {
 }
 
 soundWave.prototype.pause = function() {
-    this.node.disconnect();
     this.playing = false;
-    this.counter = 0;
 }
