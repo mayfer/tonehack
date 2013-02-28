@@ -54,7 +54,7 @@
 		    	white_key_position = white_key_position + key_width;
 		    	white_key_counter++;
 		    }
-            key_jq.data('freq', Notes.relative_note(Notes.FUNDAMENTAL*2, key+1));
+            key_jq.data('freq', Notes.relative_note(Notes.FUNDAMENTAL, key+1));
             $('#vpcf_container').append(key_jq);
 		}
 		
@@ -66,22 +66,22 @@
 
         if(settings.keyboard_play == true) {
             var key_bindings = {
-                65: 'A1', // a
-                83: 'B1', // s
-                68: 'C1', // d
-                70: 'D1', // f
-                71: 'E1', // g
-                72: 'F1', // h
-                74: 'G1', // j
-                75: 'A2', // k
-                76: 'B2', // l
+                65: 'A2', // a
+                83: 'B2', // s
+                68: 'C2', // d
+                70: 'D2', // f
+                71: 'E2', // g
+                72: 'F2', // h
+                74: 'G2', // j
+                75: 'A3', // k
+                76: 'B3', // l
 
-                87: 'B1b', // w
-                82: 'C1#', // r
-                84: 'E1b', // t
-                85: 'F1#', // u
-                73: 'G1#', // i
-                79: 'B2b', // o
+                87: 'B2b', // w
+                82: 'C2#', // r
+                84: 'E2b', // t
+                85: 'F2#', // u
+                73: 'G2#', // i
+                79: 'B3b', // o
             };
 
             $.each(key_bindings, function(i, val){
