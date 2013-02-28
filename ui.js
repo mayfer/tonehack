@@ -494,7 +494,7 @@ function waveCanvas(jq_elem, freqs) {
     };
 
     this.playNote = function(note_freq) {
-        var base_freq = waves[0].freq;
+        var base_freq = 110;
         var multiplier = note_freq / base_freq;
         var adjusted_waves = [];
         for(var i=0; i<waves.length; i++) {

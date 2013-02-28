@@ -54,7 +54,7 @@
 		    	white_key_position = white_key_position + key_width;
 		    	white_key_counter++;
 		    }
-            key_jq.data('freq', Notes.relative_note(Notes.FUNDAMENTAL, key+1));
+            key_jq.data('freq', Notes.relative_note(Notes.FUNDAMENTAL, key));
             $('#vpcf_container').append(key_jq);
 		}
 		
