@@ -331,7 +331,7 @@ function waveCanvas(jq_elem, freqs) {
             }));
 
         $('<div>').addClass('graph-label x').html('Time').appendTo(draw_area);
-        $('<div>').addClass('graph-label x-min').html('0').appendTo(draw_area);
+        $('<div>').addClass('graph-label x-min').html('0 ms').appendTo(draw_area);
         $('<div>').addClass('graph-label x-max').html('<input type="text" class="duration" value="'+wave.duration+'" /> ms').appendTo(draw_area);
         $('<div>').addClass('graph-label y').html('Amplitude').appendTo(draw_area);
         $('<div>').addClass('graph-label y-min').html('0%').appendTo(draw_area);
@@ -358,6 +358,9 @@ function waveCanvas(jq_elem, freqs) {
             freq.focus();
         });
 
+        var freq_bg = new Canvas(draw_area);
+        this.drawBackground(freq_bg);
+        
         freq_envelope_canvas = new drawingCanvas(draw_area);
         freq_envelope_canvas.init(FREQ_ENV_COLOR);
         freq_envelope_canvas.setPoints(wave.freq_envelope);
@@ -382,6 +385,50 @@ function waveCanvas(jq_elem, freqs) {
     this.closeEnvelopeEditor = function() {
         var modal = $('.modal-adsr');
         modal.remove();
+    }
+
+    this.drawBackground = function(canvas_jq) {
+        var canvas = canvas_jq.get(0);
+        var context = canvas.getContext("2d");
+        context.lineWidth = 1;
+        context.lineCap = "round";
+        context.clearRect(0, 0, context.width, context.height);
+        
+        var grid_size = 12; // px
+        
+        // vertical lines
+        for(var i = grid_size; i < context.width; i += grid_size) {
+            if((i / grid_size) % 5 == 0) {
+                context.strokeStyle = "#aaa";
+            } else {
+                context.strokeStyle = "#ddd";
+            }
+            context.beginPath();
+            context.moveTo(i+0.5, 0);
+            context.lineTo(i+0.5, context.height);
+            context.stroke();
+        }
+        
+        // for the horiz lines, start from the middle,
+        for(var i = 0; i < context.height / 2; i += grid_size) {
+            if((i / grid_size) % 5 == 0) {
+                context.strokeStyle = "#aaa";
+            } else {
+                context.strokeStyle = "#ddd";
+            }
+            // then stroke one above
+            context.beginPath();
+            context.moveTo(0, context.height/2 - i+0.5);
+            context.lineTo(context.width, context.height/2 - i+0.5);
+            context.stroke();
+
+            // and one below
+            context.beginPath();
+            context.moveTo(0, context.height/2 + i+0.5);
+            context.lineTo(context.width, context.height/2 + i+0.5);
+            context.stroke();
+        }
+
     }
 
     this.drawEnvelope = function(canvas_jq, envelope, color) {

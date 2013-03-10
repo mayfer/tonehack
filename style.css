@@ -51,9 +51,11 @@ input.duration, .duration input { width: 50px; background: rgba(255,255,255,0.8)
 .modal-adsr .actions a { line-height: 37px; margin-left: 15px; font-size: 14px; }
 .modal-adsr .freq { font-size: 18px; }
 
-.draw-adsr{ margin: 35px 0 30px 30px; border-bottom: 1px solid #000; border-left: 1px solid #000; cursor: crosshair; background: #f6f6f6 url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==) bottom left; position: relative; height: 284px; }
+.draw-adsr{ margin: 35px 0 30px 30px; border-bottom: 1px solid #000; border-left: 1px solid #000; cursor: crosshair; position: relative; height: 288px; background: #f6f6f6; }
 
-.drawing-canvas { position: absolute; top: 0; left: 0; opacity: 0.5; }
+/* background: #f6f6f6 url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==) bottom left;} */
+
+.drawing-canvas { position: absolute; top: 0; left: 0; opacity: 0.3; }
 .drawing-canvas.active { z-index: 100; opacity: 1; }
 
 .draw-mode { z-index: 200; position: absolute; top: 30px; left: 50%; width: 300px; margin-left: -150px; border-radius: 5px; line-height: 30px; text-align: center; }

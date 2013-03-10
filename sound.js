@@ -50,7 +50,7 @@ soundWave.prototype.process = function(e) {
 
             var envelope_amplitude = wave.currentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration));
             var pitch_bend = wave.currentPitchBend(this.counter / (this.sampleRateMillisecond * wave.duration));
-            var current_freq = pitch_bend * wave.freq;
+            var current_freq = Notes.relative_note(wave.freq, pitch_bend);
 
             // square env. amplitude to convert it to a logarithmic scale which better suits our perception
             current_amplitude = envelope_amplitude * envelope_amplitude * wave.gain;

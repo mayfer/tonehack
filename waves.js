@@ -75,7 +75,7 @@ function standingWave(context, options) {
     this.getPlotCoordinates = function(time_diff) {
         step = speed * time_diff * (Math.PI/20) * relative_freq % Math.PI*2;
         var volume_envelope_amplitude = this.currentEnvelopeValue(time_diff / this.duration);
-        var current_relative_freq = this.currentPitchBend(time_diff / this.duration) * relative_freq;
+        var current_relative_freq = Notes.relative_note(relative_freq, this.currentPitchBend(time_diff / this.duration));
         
         current_amplitude = Math.sin(step + phase) * amplitude * volume_envelope_amplitude * 2;
         var x = 0, y = this.sin(x, current_relative_freq, current_amplitude);
@@ -145,25 +145,16 @@ function standingWave(context, options) {
             index = Math.min(envelope.length-1, raw_index);
             decimal_index = Math.min(envelope.length-1, raw_decimal_index);
         }
-        var value, current_val, next_val;
         
-        // if possible, pick the volume_envelope value from a linear interpolation between indeces.
-        // this should make pitch bend smooth
+        var value;
+        
         if(index <= envelope.length-1) {
-            if(index == envelope.length-1) {
-                current_val = envelope[index];
-                next_val = envelope[0];
-            } else {
-                current_val = envelope[index];
-                next_val = envelope[index+1];
-            }
-        
-            value = current_val + (decimal_index - index) * (next_val - current_val);
+            value = envelope[index];
         } else {
             // just in case index goes wild
             value = envelope[envelope.length-1];
         }
-        var pitch_bend = (value*2);
+        var pitch_bend = ( (value) - 0.5 ) * 24;
         return pitch_bend;
     }
     this.draw = function(time_diff) {
