@@ -1,11 +1,22 @@
 html, body { margin: 0; padding: 0; background: rgba(63, 60, 60, 1); color: #fff; font-family: courier, courier new, monaco, monospace; }
 
-#tonehack { overflow: auto; }
-#presets { width: 175px; float: left; margin-right: 5px; }
+#header, #footer { background: #000; overflow: auto; }
+#tonehack { overflow: auto; margin-top: 20px; }
+#presets { width: 175px; float: left; margin: 0 5px 10px 0; }
 #overtones { width: 816px; float: left; }
+
+#footer { padding: 20px; font-size: 12px; line-height: 16px; color: #aaa; text-align: center; }
+#footer a { border: none; }
+
+#nav { float: left; }
+#nav a { background: #252525; display: inline-block; padding: 0 20px; line-height: 40px; border: none; color: #aaa; text-shadow: 0 -1px 1px #000; }
+#nav a.selected { background: rgba(63, 60, 60, 1); }
+#nav a:hover { color: #fff; }
 
 #presets h3 { margin: 0; line-height: 26px; }
 #presets .preset { display: block; padding: 10px; background: rgba(255,255,255,0.8); border-top: 1px solid #fff; border-bottom: 1px solid #aaa; border-left: 1px solid #fff; border-right: 1px solid #aaa; border-radius: 2px; }
+
+#piano { margin: 20px 0; }
 
 .container { width: 1000px; margin: 0 auto; position: relative; }
 .wave-canvas { position: relative; width: 100%; margin-bottom: 25px; }
@@ -15,14 +26,17 @@ html, body { margin: 0; padding: 0; background: rgba(63, 60, 60, 1); color: #fff
 .adsr { height: 100%; width: 25%; margin-right: 80%; background: #ddd; position: relative; }
             
 a { color: #a50; text-decoration: none; border-bottom: 1px solid #ff8000; }
-a:hover { color: #05a; border-bottom: 1px solid #08f; }
+a:hover { color: #b20; }
+#footer a:hover { color: #c90; }
             
-.controls { font-size: 14px; }
-.controls a:hover { color: #fff; border-color: #fff; position: relative; top: -1px; }
-.controls a { display: inline-block; min-width: 15px; text-align: center; margin-right: 10px; margin-bottom: 0px; padding: 3px 5px; border-top-right-radius: 2px; border-top-left-radius: 2px; color: #ccc; border-bottom: 3px solid #ccc; display: inline-block; text-decoration: none;}
-.controls a.tab { float: right; margin-right: 20px;  background: #ddd; position: relative; z-index: 1000; border: 2px solid #888; border-bottom: 1px solid #888; padding: 3px 15px; color: #000; z-index: 5; }
+.controls { font-size: 14px; line-height: 25px; height: 25px; }
+.controls .start:after { content: " Preview"; }
+.controls .pause:after { content: " Stop"; }
+.controls a:hover { color: #fff;  }
+.controls a { display: inline-block; min-width: 15px; text-align: center; margin-right: 10px; margin-bottom: 0px; padding: 0 8px; color: #ccc; border: none; display: inline-block; text-decoration: none;}
+.controls a.tab { float: right; margin-right: 20px;  background: rgba(255,255,255,0.6); position: relative; z-index: 1000;  padding: 0 15px; color: #000; z-index: 5; }
 .controls a.tab:hover { top: 0; }
-.controls a.tab.selected { float: right; margin-right: 20px;  background: #fff; border: 2px solid #ddd; border-bottom: 3px solid #fff; margin-bottom: -3px; color: #000; }
+.controls a.tab.selected { float: right; margin-right: 20px;  background: #fff;  margin-bottom: -3px; color: #000; }
 
 .labels { position: relative; }
 
@@ -36,7 +50,7 @@ a:hover { color: #05a; border-bottom: 1px solid #08f; }
             
 .add-tone { position: absolute; bottom: 15px; right: 15px; font-size: 12px; }
 
-.duration { margin-left: 20px; font-size: 14px; color: rgba(255,255,255,0.8); }
+.duration { line-height: 30px; font-size: 14px; color: rgba(255,255,255,0.8); }
 input.duration, .duration input { width: 50px; background: rgba(255,255,255,0.8); border: 1px solid rgba(0,0,0,0.3); margin: 0 2px; padding: 2px 3px; text-align: right; color: #333; }
 .duration input:focus { background: #fff; }
 
@@ -72,7 +86,7 @@ input.duration, .duration input { width: 50px; background: rgba(255,255,255,0.8)
 .graph-label.x-max { right: 20px; bottom: -25px; }
 
 h1, h2 { padding: 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FF8000, 0 0 70px #FF8000, 0 0 80px #FF8000, 0 0 100px #FF8000, 0 0 150px #FF8000; color: #fff; }
-h1 { margin: 40px 0 10px 0; font-size: 25px; line-height: 28px; text-align: right; }
-h2 { font-size: 16px; line-height: 20px; margin-bottom: 40px; text-align: right; }
+h1 { margin: 30px 0 5px 0; font-size: 25px; line-height: 28px; text-align: right; }
+h2 { font-size: 16px; line-height: 20px; margin: 0; text-align: right; }
 h2 span.lt { font-size: 25px; }
 

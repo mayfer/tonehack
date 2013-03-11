@@ -58,6 +58,7 @@
                 $('#piano').piano({
                     number_of_keys: 55,
                     keyboard_play: true,
+                    key_height: 70,
                 });
 
                 $('#piano').on('click', '.note', function(e){
@@ -78,17 +79,25 @@
         </script>
     </head>
     <body>
-        <div class='container'>
-            <h1>tonehack<span> &lt;</span></h1>
-            <h2>timbres from scratch<span class='lt'> &lt;</span></h2>
+        <div id='header'>
+            <div class='container'>
+                <h1>tonehack<span> &lt;</span></h1>
+                <h2>timbres from scratch<span class='lt'> &lt;</span></h2>
 
+                <div id='nav'>
+                    <a href='' class='selected'>Timbre builder</a>
+                    <a href=''>Further reading</a>
+                </div>
+            </div>
+        </div>
+        <div class='container'>
+            <div id='piano'> </div>
             <div id='tonehack'>
                 <div id='presets'>
                     <h3>Presets</h3>
                 </div>
                 <div id='overtones' class='wave-canvas'> </div>
             </div>
-            <div id='piano'> </div>
             
             <div id='article'>
                 <p>
@@ -98,6 +107,15 @@
                         <li>Green line is the Pitch bend (frequency shifting)</li>
                     </ul>
                 </p>
+            </div>
+        </div>
+        <div id='footer'>
+            <div class='container'>
+                <div class='column'>
+                    made by <a href='http://muratayfer.com'>murat</a><br />
+                    <span style='opacity: 0.8'>last updated march 2013</span><br />
+                    <a href=''>more info</a>
+                </div>
             </div>
         </div>
     </body>

@@ -97,7 +97,7 @@ function standingWave(context, options) {
     };
     this.currentEnvelopeValue = function(percent_progress) {
         var envelope = this.volume_envelope;
-        var raw_decimal_index = envelope.length * percent_progress;
+        var raw_decimal_index = (envelope.length-1) * percent_progress;
         var raw_index = Math.floor(raw_decimal_index);
         var index, decimal_index;
         

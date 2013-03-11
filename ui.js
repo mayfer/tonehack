@@ -64,8 +64,21 @@ function waveCanvas(jq_elem, freqs) {
         this.drawWaveMode();
         this.initControls();
         this.initWaves();
+
+        var that = this;
         if(options.details) {
             this.initEnvelopes();
+
+            $('<span>').addClass('duration').html('<label>Set all tone durations to: <input class="durations" type="text" />ms</label>').attr('href', '#').appendTo(jq_elem).find('input').keypress(function(e) {
+                if(e.which == 13) {
+                    var duration = parseInt($(this).val());
+                    for(var i=0; i<freqs.length; i++) {
+                        freqs[i].duration = duration;
+                    }
+                    that.stop();
+                    that.reSetup();
+                }
+            });
         }
         this.reset();
 
@@ -236,10 +249,21 @@ function waveCanvas(jq_elem, freqs) {
             .appendTo(adsr_container)
             .on('click', function(e){
                 e.preventDefault();
-                var duration = 1000;
                 // use the duration of the first wave if possible
-                if(freqs.length) duration = freqs[0].duration;
-                freqs.push({freq: 220, duration: duration});
+                if(freqs.length) {
+                    var last = freqs.length - 1;
+                    freqs.push({
+                        freq: freqs[last].freq * 2,
+                        duration: freqs[last].duration,
+                        volume_envelope: freqs[last].volume_envelope,
+                        freq_envelope: freqs[last].freq_envelope,
+                    });
+                } else {
+                    freqs.push({
+                        freq: 220,
+                        duration: 1000,
+                    });
+                }
                 that.reSetup();
             });
 
@@ -479,29 +503,13 @@ function waveCanvas(jq_elem, freqs) {
         var that = this;
         var controls = $('<div>').addClass('controls');
         $('<a>').addClass('start icon-play').attr('href', '#').appendTo(controls);
-        if(options.details) {
-            $('<span>').addClass('duration').html('<label>Set all tone durations to: <input class="durations" type="text" />ms</label>').attr('href', '#').appendTo(controls);
-            //$('<a>').addClass('stop icon-stop'),
-            //$('<a>').addClass('faster').html('faster'),
-            //$('<a>').addClass('slower').html('slower'),
-        }
         if(options.details || freqs.length > 1) {
-            $('<a>').addClass('superpose tab').html('resulting vibration').attr('href', '#').appendTo(controls);
-            $('<a>').addClass('split tab selected').html('breakdown of overtones').attr('href', '#').appendTo(controls);
+            $('<a>').addClass('superpose tab').html('Resulting vibration').attr('href', '#').appendTo(controls);
+            $('<a>').addClass('split tab selected').html('Breakdown of overtones').attr('href', '#').appendTo(controls);
         }
         
         controls.prependTo(jq_elem);
 
-        controls.find('.durations').keypress(function(e) {
-            if(e.which == 13) {
-                var duration = parseInt($(this).val());
-                for(var i=0; i<freqs.length; i++) {
-                    freqs[i].duration = duration;
-                }
-                that.stop();
-                that.reSetup();
-            }
-        });
         controls.on('click', '.start, .pause, .stop', function(e){
             e.preventDefault();
             if($(this).hasClass('start')) {
