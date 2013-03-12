@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>tonehack</title>
+        <meta charset='utf-8' />
+        <!-- libs -->
+        <script type='text/javascript' src='{{ STATIC_URL }}js/jquery.min.js'></script>
+        <script type='text/javascript' src='{{ STATIC_URL }}js/require.min.js'></script>
+
+        <!-- hand-written js -->
+        <script type='text/javascript' src='{{ STATIC_URL }}js/draw.js'></script>
+        <script type='text/javascript' src='{{ STATIC_URL }}js/animframe.js'></script>
+        <script type='text/javascript' src='{{ STATIC_URL }}js/notes.js'></script>
+        <script type='text/javascript' src='{{ STATIC_URL }}js/sound.js'></script>
+        <script type='text/javascript' src='{{ STATIC_URL }}js/waves.js'></script>
+        <script type='text/javascript' src='{{ STATIC_URL }}js/ui.js'></script>
+        <script type='text/javascript' src='{{ STATIC_URL }}js/piano.js'></script>
+
+        <link href="{{ STATIC_URL }}icons/css/font-awesome.css" rel="stylesheet" type="text/css" />
+        <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css" />
+        <link href="{{ STATIC_URL }}css/piano.css" rel="stylesheet" type="text/css" />
+        <link href="{{ STATIC_URL }}css/article.css" rel="stylesheet" type="text/css" />
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        <div id='header'>
+            <div class='container'>
+                <h1>tonehack<span> &lt;</span></h1>
+                <h2>timbres from scratch<span class='lt'> &lt;</span></h2>
+
+                <div id='nav'>
+                    <a href='' class='selected'>Timbre builder</a>
+                    <a href=''>Further reading</a>
+                </div>
+            </div>
+        </div>
+        <div class='container'>
+        {% block content %}{% endblock %}
+        </div>
+        <div id='footer'>
+            <div class='container'>
+                <div class='column'>
+                    made by <a href='http://muratayfer.com'>murat</a><br />
+                    <span style='opacity: 0.8'>last updated march 2013</span><br />
+                    <a href=''>more info</a>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

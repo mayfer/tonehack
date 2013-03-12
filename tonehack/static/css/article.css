@@ -11,7 +11,7 @@
 #article .controls a.start:after { content: " Pluck"; }
 #article .controls a.pause:after { content: " Stop"; }
 
-#article .parent-canvas { border: 1px solid #aaa; }
+#article .parent-canvas { border: 1px solid #aaa; border-top: none; border-left: none; }
 
 .label { text-align: center; color: rgba(0,0,0,0.7); font-size: 0.9em; line-height: 1em; font-style: italic; margin-top: 5px; }
 
