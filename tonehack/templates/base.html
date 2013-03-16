@@ -1,3 +1,4 @@
+{% load current %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,10 +17,10 @@
         <script type='text/javascript' src='{{ STATIC_URL }}js/ui.js'></script>
         <script type='text/javascript' src='{{ STATIC_URL }}js/piano.js'></script>
 
-        <link href="{{ STATIC_URL }}icons/css/font-awesome.css" rel="stylesheet" type="text/css" />
-        <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet" type="text/css" />
-        <link href="{{ STATIC_URL }}css/piano.css" rel="stylesheet" type="text/css" />
-        <link href="{{ STATIC_URL }}css/article.css" rel="stylesheet" type="text/css" />
+        <link href='{{ STATIC_URL }}icons/css/font-awesome.css' rel='stylesheet' type='text/css' />
+        <link href='{{ STATIC_URL }}css/style.css' rel='stylesheet' type='text/css' />
+        <link href='{{ STATIC_URL }}css/piano.css' rel='stylesheet' type='text/css' />
+        <link href='{{ STATIC_URL }}css/article.css' rel='stylesheet' type='text/css' />
         {% block head %}{% endblock %}
     </head>
     <body>
@@ -29,8 +30,10 @@
                 <h2>timbres from scratch<span class='lt'> &lt;</span></h2>
 
                 <div id='nav'>
-                    <a href='' class='selected'>Timbre builder</a>
-                    <a href=''>Further reading</a>
+                    {% with urlname=request.path|urlname %}
+                    <a href='{% url index %}' {% if urlname = 'index'  %} class='selected' {% endif %}>Timbre builder</a>
+                    <a href='{% url article %}' {% if urlname = 'article'  %} class='selected' {% endif %}>Further reading</a>
+                    {% endwith  %}
                 </div>
             </div>
         </div>
