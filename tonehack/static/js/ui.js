@@ -2,6 +2,7 @@ var VOLUME_ENV_COLOR = '#aa6600';
 var FREQ_ENV_COLOR = '#00aa00';
 
 function waveCanvas(jq_elem, freqs) {
+    this.freqs = freqs;
     this.jq_elem = jq_elem;
     this.start_time = new Date().getTime();
     this.time_diff = 0;
@@ -49,6 +50,7 @@ function waveCanvas(jq_elem, freqs) {
         for(var i = 0; i < this.waves.length; i++) {
             this.addWave(this.waves[i]);
         }
+        this.reset();
         this.saveWaves();
     }
 
@@ -113,19 +115,19 @@ function waveCanvas(jq_elem, freqs) {
     }
 
     this.loadPreset = function(preset) {
-        freqs = preset;
+        this.freqs = preset;
         this.reSetup();
     }
 
     this.initWaves = function() {
         this.waves = [];
         var that = this;
-        $.each(freqs, function(i, freqobj) {
+        $.each(this.freqs, function(i, freqobj) {
             that.waves.push(new standingWave({
-                    freq: freqobj['freq'],
-                    volume_envelope: freqobj['volume_envelope'],
-                    freq_envelope: freqobj['freq_envelope'],
-                    duration: freqobj['duration'],
+                freq: freqobj['freq'],
+                volume_envelope: freqobj['volume_envelope'],
+                freq_envelope: freqobj['freq_envelope'],
+                duration: freqobj['duration'],
             }));
         });
         this.soundwave = new soundWave(this.audio_context, this.waves);
@@ -167,7 +169,11 @@ function waveCanvas(jq_elem, freqs) {
 
     this.reset = function() {
         this.time_diff = 0;
-        // useless
+        for(i = 0; i < this.wave_canvases.length; i++) {
+            this.wave_canvases[i].clear();
+            this.wave_canvases[i].draw(0);
+            this.wave_canvases[i].markProgress(0);
+        }
     };
 
     this.initEnvelopes = function() {

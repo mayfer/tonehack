@@ -82,10 +82,14 @@ function stringCanvas(jq_elem, wave, base_freq) {
         this.context.stroke();
     };
 
+    this.clear = function() {
+        this.context.clearRect(0, 0, this.context.width, this.context.height);
+    }
+
     this.markProgress = function(time_diff) {
         if(this.progress_elem !== undefined) {
             var percent_progress = 100 * (time_diff % this.wave.duration) / this.wave.duration;
-            this.progress_elem.css('left', Math.floor(percent_progress) + "%");
+            //this.progress_elem.css('left', Math.floor(percent_progress) + "%");
         }
     };
 }
@@ -144,7 +148,7 @@ function drawingCanvas(jq_elem, envelope) {
         envelope.shift();
     }
     for(var j=0; j<resolution; j++) {
-        envelope[j] = points[j];
+        envelope[j] = 1 - points[j];
     }
 
     this.getCanvasElement = function() {
