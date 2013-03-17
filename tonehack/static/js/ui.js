@@ -70,11 +70,12 @@ function waveCanvas(jq_elem, freqs) {
         volume_envelope_canvas.getCanvasElement().addClass('volume active');
         this.drawEnvelope(volume_envelope_canvas.getCanvasElement(), wave.volume_envelope, VOLUME_ENV_COLOR);
         
-        var progress_canvas = new Canvas(envelopes).addClass('progress');
+        var progress_elem = $('<div>').addClass('progress').appendTo(envelopes);
 
-        var string_canvas = new stringCanvas(string, wave);
+        var base_freq = 110;
+        var string_canvas = new stringCanvas(string, wave, base_freq);
         string_canvas.init();
-        string_canvas.setProgressElem(progress_canvas);
+        string_canvas.setProgressElem(progress_elem);
         
         this.wave_canvases.push(string_canvas);
     }

@@ -19,14 +19,13 @@ function Canvas(jq_elem) {
 }
 
 function stringCanvas(jq_elem, wave, base_freq) {
-    base_freq = 220;
     this.jq_elem = jq_elem;
     this.wave = wave;
     this.canvas_jq = new Canvas(this.jq_elem).addClass('string-canvas');
     this.context = this.canvas_jq.get(0).getContext("2d");
     this.standing = Math.PI / this.context.width; // resonant wavelength for canvas width
     this.relative_freq = this.standing * wave.freq / base_freq;
-    this.wave_height = this.context.height;
+    this.wave_height = this.context.height / 2;
     this.speed = 14;
     
     this.current_plot_coordinates = null;
@@ -39,10 +38,7 @@ function stringCanvas(jq_elem, wave, base_freq) {
     };
 
     this.setProgressElem = function(jq_progress_elem) {
-        this.jq_progress = jq_progress_elem;
-        this.progress_canvas = this.jq_progress.get(0);
-        //this.progress_context = this.progress_canvas.getContext("2d");
-        //this.progress_context.strokeStyle = '#a00';
+        this.progress_elem = jq_progress_elem;
     };
 
     this.getPlotCoordinates = function(time_diff) {
@@ -87,19 +83,9 @@ function stringCanvas(jq_elem, wave, base_freq) {
     };
 
     this.markProgress = function(time_diff) {
-        if(this.progress_context !== undefined) {
-            var percent_progress = (time_diff % this.wave.duration) / this.wave.duration;
-
-            this.progress_context.clearRect(
-                0, //percent_progress*this.progress_context.width-50,
-                0,
-                this.progress_context.width, //percent_progress*this.progress_context.width+50,
-                this.progress_context.height
-            );
-            this.progress_context.beginPath();
-            this.progress_context.moveTo(percent_progress*this.progress_context.width, 0);
-            this.progress_context.lineTo(percent_progress*this.progress_context.width, this.progress_context.height);
-            this.progress_context.stroke();
+        if(this.progress_elem !== undefined) {
+            var percent_progress = 100 * (time_diff % this.wave.duration) / this.wave.duration;
+            this.progress_elem.css('left', Math.floor(percent_progress) + "%");
         }
     };
 }
@@ -154,10 +140,11 @@ function drawingCanvas(jq_elem, envelope) {
     }
 
     // truncate envelope if it's somehow larger than the expected size
-    if(envelope.length > resolution) {
-        while(envelope.length > resolution) {
-            envelope.pop();
-        }
+    while(envelope.length > resolution) {
+        envelope.shift();
+    }
+    for(var j=0; j<resolution; j++) {
+        envelope[j] = points[j];
     }
 
     this.getCanvasElement = function() {
@@ -239,7 +226,7 @@ function drawingCanvas(jq_elem, envelope) {
         }
         var y_diff = current_position.y - prev_position.y;
         for(var i = from; i <= to; i++) {
-            if(from != to) {
+            if(from != to && i < resolution) {
                 // linear values between from and to coordinates
                 points[i] = (prev_position.y + (y_diff * (Math.abs(adjusted_px-i)/Math.abs(adjusted_cx-adjusted_px)))) / ctx.height;
                 envelope[i] = this.getValue(i);

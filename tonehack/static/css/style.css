@@ -9,6 +9,7 @@ canvas { display: block; }
 .row { position: relative; overflow: auto; margin: 0 0 5px 0; }
 .row .envelopes { float: left; cursor: crosshair; display: inline-block; position: relative; height: 100px; background: #fff; width: 70%; }
 .row .string { float: left; width: 30%; height: 100px; background: #fff; }
+.row .envelopes .progress { height: 10px; width: 2px; background: #a00; position: absolute; bottom: 0; left: 0; }
 
 #footer { padding: 20px; font-size: 12px; line-height: 16px; color: #aaa; text-align: center; }
 #footer a { border: none; }
@@ -74,7 +75,6 @@ input.duration, .duration input { width: 50px; background: rgba(255,255,255,0.8)
 
 /* background: #f6f6f6 url(data:image/gif;base64,R0lGODlhFAAUAIAAAMDAwP///yH5BAEAAAEALAAAAAAUABQAAAImhI+pwe3vAJxQ0hssnnq/7jVgmJGfGaGiyoyh68GbjNGXTeEcGxQAOw==) bottom left;} */
 
-.progress { position: absolute; top: 0; left: 0; }
 .drawing-canvas { position: absolute; top: 0; left: 0; opacity: 0.3; }
 .drawing-canvas.active { z-index: 100; opacity: 1; }
 
