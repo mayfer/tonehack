@@ -3,22 +3,16 @@ var FREQ_ENV_COLOR = '#00aa00';
 
 function waveCanvas(jq_elem, freqs) {
     this.jq_elem = jq_elem;
-    var superposed = null;
-    var start_time = new Date().getTime();
-    var time_diff = 0;
-    var pause_time_diff = 0;
-    var state = 'stopped';
-    var anim_frame;
-    var waves = [];
-    var parent;
-    var waves_canvas;
-    var waves_context;
-    var waves_canvas_jq;
-    var soundwave;
-    var drawMode = 'overtones';
-    var options;
-
-    this.wave_rows = null;
+    this.start_time = new Date().getTime();
+    this.time_diff = 0;
+    this.waves = [];
+    this.wave_canvases = [];
+    this.wave_rows = [];
+    this.state = 'stopped';
+    this.soundwave = null;
+    this.anim_frame = null;
+    this.options = null;
+    this.audio_context = null;
 
     this.init = function(options_input) {
         default_options = {
@@ -26,12 +20,12 @@ function waveCanvas(jq_elem, freqs) {
             scale: 1,
             
         }
-        options = $.extend({}, default_options, options_input); 
+        this.options = $.extend({}, default_options, options_input); 
 
-        if(options.audio_context) {
-            audio_context = options.audio_context;
+        if(this.options.audio_context) {
+            this.audio_context = this.options.audio_context;
         } else {
-            audio_context = new webkitAudioContext();
+            this.audio_context = new webkitAudioContext();
         }
 
         this.newsetup();
@@ -42,179 +36,21 @@ function waveCanvas(jq_elem, freqs) {
         this.initControls();
         this.initWaves();
         this.wave_rows = $('<div>').addClass('wave-rows').appendTo(this.jq_elem);
-
-        for(var i = 0; i < waves.length; i++) {
-            this.addWave(waves[i]);
-        }
-        this.saveWaves();
-    }
-
-    this.setup = function() {
-        parent = $('<div class="parent-canvas">').css('height', (freqs.length*75*options.scale + 80*options.scale) + "px");
-        $(jq_elem).append(parent);
-
-        waves_canvas_jq = new Canvas(parent).addClass('waves');
-        if(!options.details) {
-            waves_canvas_jq.css({
-                width: '100%',
-                margin: 0,
-            });
-        }
-        waves_canvas = waves_canvas_jq.get(0);
-        waves_context = waves_canvas.getContext("2d");
-
-        function compare(a, b) {
-          if (a.freq < b.freq)
-             return -1;
-          if (a.freq > b.freq)
-            return 1;
-          return 0;
-        }
-        freqs.sort(compare);
-
-        BASE_FREQ = freqs[0].freq;
-
-        this.drawWaveMode();
-        this.initControls();
-        this.initWaves();
-
-        var that = this;
-        if(options.details) {
-            this.initEnvelopes();
-
-            $('<span>').addClass('duration').html('<label>Set all tone durations to: <input class="durations" type="text" />ms</label>').attr('href', '#').appendTo(jq_elem).find('input').keypress(function(e) {
-                if(e.which == 13) {
-                    var duration = parseInt($(this).val());
-                    for(var i=0; i<freqs.length; i++) {
-                        freqs[i].duration = duration;
-                    }
-                    that.stop();
-                    that.reSetup();
+        
+        $('<span>').addClass('duration').html('<label>Set all tone durations to: <input class="durations" type="text" />ms</label>').attr('href', '#').appendTo(jq_elem).find('input').keypress(function(e) {
+            if(e.which == 13) {
+                var duration = parseInt($(this).val());
+                for(var i=0; i<this.waves.length; i++) {
+                    this.waves[i].duration = duration;
                 }
-            });
+            }
+        });
+
+        for(var i = 0; i < this.waves.length; i++) {
+            this.addWave(this.waves[i]);
         }
-        this.reset();
         this.saveWaves();
     }
-
-    this.saveWaves = function() {
-        var wave_data = [];
-        for(var j=0; j<waves.length; j++) {
-            var wave_struct = {
-                freq: waves[j].freq,
-                freq_envelope: waves[j].freq_envelope,
-                volume_envelope: waves[j].volume_envelope,
-                duration: waves[j].duration,
-            };
-            wave_data.push(wave_struct);
-        }
-        window.localStorage['waves'] = JSON.stringify(wave_data);
-    }
-
-    this.reSetup = function() {
-        parent.parent().html('');
-        this.setup();
-    }
-
-    this.loadPreset = function(preset) {
-        freqs = preset;
-        this.reSetup();
-    }
-
-    this.initWaves = function() {
-        waves = [];
-        $.each(freqs, function(i, freqobj) {
-            waves.push(new standingWave({
-                    freq: freqobj['freq'],
-                    volume_envelope: freqobj['volume_envelope'],
-                    freq_envelope: freqobj['freq_envelope'],
-                    duration: freqobj['duration'],
-            }));
-        });
-        soundwave = new soundWave(audio_context, waves);
-
-    }
-
-    this.setWaves = function(input_waves) {
-        waves = input_waves;
-    };
-
-    this.drawWaveMode = function() {
-        context = waves_context;
-        context.fillStyle = "rgba(255,255,255, 0.3)";
-        context.lineWidth = 2;
-        context.strokeStyle = "#000";
-    };
-
-    this.drawFrame = function() {
-        if(drawMode == 'overtones') {
-            for(i = 0; i < waves.length; i++) {
-                waves[i].draw(time_diff);
-                waves[i].markProgress(time_diff);
-            }
-        } else if (drawMode == 'superposed') {
-            superposed.draw(time_diff);
-            for(i = 0; i < waves.length; i++) {
-                waves[i].markProgress(time_diff);
-            }
-        }
-        time_diff = new Date().getTime() - start_time;
-    }
-
-    this.animLoop = function() {
-        if(state == 'running') {
-            anim_frame = requestAnimFrame(this.animLoop.bind(this));
-            this.drawFrame();
-        }
-        frames++;
-    }
-
-    this.start = function() {
-        jq_elem.find('.controls .start').removeClass('start icon-play').addClass('pause icon-pause');
-        if(state != 'running') {
-            if(state == 'stopped') {
-                start_time = new Date().getTime();
-            } else if(state == 'paused') {
-                start_time = new Date().getTime() - pause_time_diff;
-            }
-            state = 'running';
-            this.animLoop();
-            soundwave.play();
-        }
-    };
-
-    this.pause = function() {
-        jq_elem.find('.controls .pause').removeClass('pause icon-pause').addClass('start icon-play');
-        state = 'paused';
-        pause_time_diff = new Date().getTime() - start_time;
-        soundwave.pause();
-    };
-
-    this.stop = function() {
-        jq_elem.find('.controls .pause').removeClass('pause icon-pause').addClass('start icon-play');
-        state = 'stopped';
-        cancelAnimFrame(anim_frame);
-        this.reset()
-        soundwave.pause();
-    };
-
-    this.restart = function() {
-        // graceful
-        start_time = new Date().getTime();
-    }
-
-    this.clear = function() {
-        context = waves_context;
-        context.fillStyle = "rgba(255,255,255, 1)";
-        context.fillRect(0, 0, context.width, context.height);
-        this.drawWaveMode();
-    }
-
-    this.reset = function() {
-        this.clear();
-        time_diff = 0;
-        this.drawFrame();
-    };
 
     this.addWave = function(wave) {
         var row = $('<div>').addClass('row').appendTo(this.wave_rows);
@@ -240,11 +76,102 @@ function waveCanvas(jq_elem, freqs) {
         string_canvas.init();
         string_canvas.setProgressElem(progress_canvas);
         
+        this.wave_canvases.push(string_canvas);
     }
+
+    this.setup = function() {
+        function compare(a, b) {
+          if (a.freq < b.freq)
+             return -1;
+          if (a.freq > b.freq)
+            return 1;
+          return 0;
+        }
+        freqs.sort(compare);
+
+        BASE_FREQ = freqs[0].freq;
+    }
+
+    this.saveWaves = function() {
+        var wave_data = [];
+        for(var j=0; j<this.waves.length; j++) {
+            var wave_struct = {
+                freq: this.waves[j].freq,
+                freq_envelope: this.waves[j].freq_envelope,
+                volume_envelope: this.waves[j].volume_envelope,
+                duration: this.waves[j].duration,
+            };
+            wave_data.push(wave_struct);
+        }
+        window.localStorage['waves'] = JSON.stringify(wave_data);
+    }
+
+    this.reSetup = function() {
+        jq_elem.html('');
+        this.newsetup();
+    }
+
+    this.loadPreset = function(preset) {
+        freqs = preset;
+        this.reSetup();
+    }
+
+    this.initWaves = function() {
+        this.waves = [];
+        var that = this;
+        $.each(freqs, function(i, freqobj) {
+            that.waves.push(new standingWave({
+                    freq: freqobj['freq'],
+                    volume_envelope: freqobj['volume_envelope'],
+                    freq_envelope: freqobj['freq_envelope'],
+                    duration: freqobj['duration'],
+            }));
+        });
+        this.soundwave = new soundWave(this.audio_context, this.waves);
+
+    }
+
+    this.drawFrame = function() {
+        for(i = 0; i < this.wave_canvases.length; i++) {
+            this.wave_canvases[i].draw(this.time_diff);
+            this.wave_canvases[i].markProgress(this.time_diff);
+        }
+        this.time_diff = new Date().getTime() - this.start_time;
+    }
+
+    this.animLoop = function() {
+        if(this.state == 'running') {
+            this.anim_frame = requestAnimFrame(this.animLoop.bind(this));
+            this.drawFrame();
+        }
+    }
+
+    this.start = function() {
+        jq_elem.find('.controls .start').removeClass('start icon-play').addClass('pause icon-pause');
+        if(this.state != 'running') {
+            this.start_time = new Date().getTime();
+            this.state = 'running';
+            this.animLoop();
+            this.soundwave.play();
+        }
+    };
+
+    this.stop = function() {
+        jq_elem.find('.controls .pause').removeClass('pause icon-pause').addClass('start icon-play');
+        this.state = 'stopped';
+        cancelAnimFrame(this.anim_frame);
+        this.reset()
+        this.soundwave.pause();
+    };
+
+    this.reset = function() {
+        this.time_diff = 0;
+        // useless
+    };
 
     this.initEnvelopes = function() {
         var adsr_container = $('<div>').addClass('adsr').appendTo(parent);
-        var box_height = adsr_container.height() / (waves.length + 1) - 10;
+        var box_height = adsr_container.height() / (this.waves.length + 1) - 10;
         var box_width = adsr_container.width() - 40;
         var that = this;
         $('<div>').addClass('adsr-title').html('Overtones<br /><span class="tip">(click to edit)</span>').appendTo(adsr_container);
@@ -311,7 +238,7 @@ function waveCanvas(jq_elem, freqs) {
 
     this.adjustGainLevels = function() {
         max_vol = 0;
-        for(var i=0; i<waves.length; i++) {
+        for(var i=0; i<this.waves.length; i++) {
             
         }
     }
@@ -348,7 +275,7 @@ function waveCanvas(jq_elem, freqs) {
             .append($('<a>').addClass('save').attr('href', '#').html('Save').click(function(e){
                 e.preventDefault();
                 var autostart = false;
-                if(state == 'running') {
+                if(this.state == 'running') {
                     that.stop();
                     autostart = true;
                 }
@@ -364,7 +291,7 @@ function waveCanvas(jq_elem, freqs) {
             .append($('<a>').addClass('delete').attr('href', '#').html('Delete overtone').click(function(e) {
                 e.preventDefault();
                 var autostart = false;
-                if(state == 'running') {
+                if(this.state == 'running') {
                     that.stop();
                     autostart = true;
                 }
@@ -514,29 +441,10 @@ function waveCanvas(jq_elem, freqs) {
         context.stroke();
     }
 
-    this.setMode = function(mode) {
-        if(mode == 'overtones') {
-            jq_elem.find('.superpose').removeClass('selected');
-            jq_elem.find('.split').addClass('selected');
-            drawMode = mode;
-        } else if(mode == 'superposed') {
-            jq_elem.find('.split').removeClass('selected');
-            jq_elem.find('.superpose').addClass('selected');
-            drawMode = mode;
-        } else {
-            alert('unsupported mode');
-        }
-        this.reset();
-    };
-
     this.initControls = function(){
         var that = this;
         var controls = $('<div>').addClass('controls');
         $('<a>').addClass('start icon-play').attr('href', '#').appendTo(controls);
-        if(options.details || freqs.length > 1) {
-            $('<a>').addClass('superpose tab').html('Resulting vibration').attr('href', '#').appendTo(controls);
-            $('<a>').addClass('split tab selected').html('Breakdown of overtones').attr('href', '#').appendTo(controls);
-        }
         
         controls.prependTo(jq_elem);
 
@@ -552,47 +460,25 @@ function waveCanvas(jq_elem, freqs) {
         });
         controls.on('click', '.stop', function(e){
             e.preventDefault();
-            state = 'stopped';
+            this.state = 'stopped';
         });
-        controls.on('click', '.faster, .slower', function(e){
-            e.preventDefault();
-            var diff = 0;
-            if($(this).hasClass('faster')) diff = 1;
-            else diff = -1;
-                    
-            for(i = 0; i < waves.length; i++) {
-                waves[i].changeSpeed(diff);
-            }
-            that.restart();
-        });
-        controls.on('click', '.split', function(e) {
-            e.preventDefault();
-            that.setMode('overtones');
-        });
-        controls.on('click', '.superpose', function(e) {
-            e.preventDefault();
-            that.setMode('superposed');
-        });
-    };
-    this.setLabel = function(label) {
-        jq_elem.append($('<div>').addClass('label').html(label));
     };
 
     this.playNote = function(note_freq) {
         var base_freq = 110;
         var multiplier = note_freq / base_freq;
         var adjusted_waves = [];
-        for(var i=0; i<waves.length; i++) {
+        for(var i=0; i<this.waves.length; i++) {
             // deep copy of the waves only seems to work this way
             var wave = new standingWave({
-                freq: waves[i]['freq'] * multiplier,
-                volume_envelope: waves[i]['volume_envelope'],
-                freq_envelope: waves[i]['freq_envelope'],
-                duration: waves[i]['duration'],
+                freq: this.waves[i]['freq'] * multiplier,
+                volume_envelope: this.waves[i]['volume_envelope'],
+                freq_envelope: this.waves[i]['freq_envelope'],
+                duration: this.waves[i]['duration'],
             })
             adjusted_waves.push(wave);
         }
-        var notewave = new soundWave(audio_context, adjusted_waves);
+        var notewave = new soundWave(this.audio_context, adjusted_waves);
         notewave.play();
         return notewave;
     }

@@ -8,7 +8,7 @@ html, body { margin: 0; padding: 0; background: rgba(63, 60, 60, 1); color: #fff
 canvas { display: block; }
 .row { position: relative; overflow: auto; margin: 0 0 5px 0; }
 .row .envelopes { float: left; cursor: crosshair; display: inline-block; position: relative; height: 100px; background: #fff; width: 70%; }
-.row .string { float: left; width: 30%; height: 100px; }
+.row .string { float: left; width: 30%; height: 100px; background: #fff; }
 
 #footer { padding: 20px; font-size: 12px; line-height: 16px; color: #aaa; text-align: center; }
 #footer a { border: none; }

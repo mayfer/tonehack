@@ -18,16 +18,17 @@ function Canvas(jq_elem) {
     return canvas_jq;
 }
 
-function stringCanvas(jq_elem, wave) {
+function stringCanvas(jq_elem, wave, base_freq) {
+    base_freq = 220;
     this.jq_elem = jq_elem;
     this.wave = wave;
     this.canvas_jq = new Canvas(this.jq_elem).addClass('string-canvas');
     this.context = this.canvas_jq.get(0).getContext("2d");
     this.standing = Math.PI / this.context.width; // resonant wavelength for canvas width
+    this.relative_freq = this.standing * wave.freq / base_freq;
     this.wave_height = this.context.height;
     this.speed = 14;
     
-    this.last_plot = null;
     this.current_plot_coordinates = null;
     
 
@@ -40,35 +41,32 @@ function stringCanvas(jq_elem, wave) {
     this.setProgressElem = function(jq_progress_elem) {
         this.jq_progress = jq_progress_elem;
         this.progress_canvas = this.jq_progress.get(0);
-        this.progress_context = this.progress_canvas.getContext("2d");
-        this.progress_context.strokeStyle = '#a00';
+        //this.progress_context = this.progress_canvas.getContext("2d");
+        //this.progress_context.strokeStyle = '#a00';
     };
 
     this.getPlotCoordinates = function(time_diff) {
-        if(this.last_plot == time_diff) {
+        if(this.last_plot === time_diff) {
             // no need to recalculate
             return this.current_plot_coordinates;
         }
         
         this.step = this.speed * time_diff * (Math.PI/20) * this.relative_freq % Math.PI*2;
-        var volume_envelope_amplitude = wave.currentEnvelopeValue(time_diff / wave.duration);
-        var current_relative_freq = Notes.relative_note(this.relative_freq, wave.currentPitchBend(time_diff / wave.duration));
+        var volume_envelope_amplitude = this.wave.currentEnvelopeValue(time_diff / this.wave.duration);
+        var current_relative_freq = Notes.relative_note(this.relative_freq, this.wave.currentPitchBend(time_diff / this.wave.duration));
         
-        var current_amplitude = Math.sin(this.step + wave.phase) * volume_envelope_amplitude * 2;
-        var x = 0, y = wave.sin(x, current_relative_freq, current_amplitude);
+        var current_amplitude = Math.sin(this.step + this.wave.phase) * volume_envelope_amplitude * this.wave_height;
+        var x = 0;
+        var y = 0;
         var points = [];
         while(x < this.context.width) {
-            var from = {
+            x += X_INCREMENT;
+            y = this.wave.sin(x, current_relative_freq, current_amplitude);
+            var point = {
                 x: x,
                 y: y,
             };
-            x += this.X_INCREMENT;
-            y = wave.sin(x, current_relative_freq, current_amplitude);
-            var to = {
-                x: x,
-                y: y,
-            };
-            points.push({from: from, to: to});
+            points.push(point);
         }
         this.last_plot = time_diff;
         this.current_plot_coordinates = points;
@@ -78,20 +76,26 @@ function stringCanvas(jq_elem, wave) {
     this.draw = function(time_diff) {
         var center = this.context.height / 2;
         var plot_coordinates = this.getPlotCoordinates(time_diff);
+        this.context.fillRect(0, 0, this.context.width, this.context.height);
         this.context.beginPath();
         this.context.moveTo(0, center);
         for(var i = 1; i < plot_coordinates.length; i++) {
             coord = plot_coordinates[i];
-            this.context.lineTo(coord.to.x, coord.to.y + center);
+            this.context.lineTo(coord.x, coord.y + center);
         }
         this.context.stroke();
     };
 
     this.markProgress = function(time_diff) {
-        if(this.progress_context !== null) {
-            var percent_progress = (time_diff % this.duration) / this.duration;
+        if(this.progress_context !== undefined) {
+            var percent_progress = (time_diff % this.wave.duration) / this.wave.duration;
 
-            this.progress_context.clearRect(0, 0, this.progress_context.width, this.progress_context.height);
+            this.progress_context.clearRect(
+                0, //percent_progress*this.progress_context.width-50,
+                0,
+                this.progress_context.width, //percent_progress*this.progress_context.width+50,
+                this.progress_context.height
+            );
             this.progress_context.beginPath();
             this.progress_context.moveTo(percent_progress*this.progress_context.width, 0);
             this.progress_context.lineTo(percent_progress*this.progress_context.width, this.progress_context.height);
