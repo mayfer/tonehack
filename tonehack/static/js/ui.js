@@ -2,7 +2,7 @@ var VOLUME_ENV_COLOR = '#aa6600';
 var FREQ_ENV_COLOR = '#00aa00';
 
 function waveCanvas(jq_elem, freqs) {
-    var jq_elem = jq_elem;
+    this.jq_elem = jq_elem;
     var superposed = null;
     var start_time = new Date().getTime();
     var time_diff = 0;
@@ -18,6 +18,8 @@ function waveCanvas(jq_elem, freqs) {
     var drawMode = 'overtones';
     var options;
 
+    this.wave_rows = null;
+
     this.init = function(options_input) {
         default_options = {
             details: true,
@@ -32,9 +34,19 @@ function waveCanvas(jq_elem, freqs) {
             audio_context = new webkitAudioContext();
         }
 
-        this.setup();
+        this.newsetup();
         return this;
     };
+
+    this.newsetup = function() {
+        this.initControls();
+        this.initWaves();
+        this.wave_rows = $('<div>').addClass('wave-rows').appendTo(this.jq_elem);
+
+        for(var i = 0; i < waves.length; i++) {
+            this.addWave(waves[i]);
+        }
+    }
 
     this.setup = function() {
         parent = $('<div class="parent-canvas">').css('height', (freqs.length*75*options.scale + 80*options.scale) + "px");
@@ -81,10 +93,13 @@ function waveCanvas(jq_elem, freqs) {
             });
         }
         this.reset();
+        this.saveWaves();
+    }
 
+    this.saveWaves = function() {
         var wave_data = [];
         for(var j=0; j<waves.length; j++) {
-            wave_struct = {
+            var wave_struct = {
                 freq: waves[j].freq,
                 freq_envelope: waves[j].freq_envelope,
                 volume_envelope: waves[j].volume_envelope,
@@ -107,20 +122,14 @@ function waveCanvas(jq_elem, freqs) {
 
     this.initWaves = function() {
         waves = [];
-        var index = 1;
         $.each(freqs, function(i, freqobj) {
-            waves.push(new standingWave(waves_context, {
-                    index: index,
-                    num_waves: freqs.length,
+            waves.push(new standingWave({
                     freq: freqobj['freq'],
-                    amplitude: ((waves_context.height / freqs.length) / 3) * options.scale,
                     volume_envelope: freqobj['volume_envelope'],
                     freq_envelope: freqobj['freq_envelope'],
                     duration: freqobj['duration'],
             }));
-            index++;
         });
-        superposed = new superposedWave(waves_context, 1, 1, waves);
         soundwave = new soundWave(audio_context, waves);
 
     }
@@ -137,8 +146,6 @@ function waveCanvas(jq_elem, freqs) {
     };
 
     this.drawFrame = function() {
-        context = waves_context;
-        context.fillRect(0, 0, context.width, context.height);
         if(drawMode == 'overtones') {
             for(i = 0; i < waves.length; i++) {
                 waves[i].draw(time_diff);
@@ -171,8 +178,8 @@ function waveCanvas(jq_elem, freqs) {
             }
             state = 'running';
             this.animLoop();
+            soundwave.play();
         }
-        soundwave.play();
     };
 
     this.pause = function() {
@@ -207,6 +214,32 @@ function waveCanvas(jq_elem, freqs) {
         time_diff = 0;
         this.drawFrame();
     };
+
+    this.addWave = function(wave) {
+        var row = $('<div>').addClass('row').appendTo(this.wave_rows);
+        var envelopes = $('<div>').addClass('envelopes').appendTo(row);
+        var string = $('<div>').addClass('string').appendTo(row);
+
+        var freq_bg = new Canvas(envelopes);
+        this.drawBackground(freq_bg);
+
+        var freq_envelope_canvas = new drawingCanvas(envelopes, wave.freq_envelope);
+        freq_envelope_canvas.init(FREQ_ENV_COLOR);
+        freq_envelope_canvas.getCanvasElement().addClass('freq');
+        this.drawEnvelope(freq_envelope_canvas.getCanvasElement(), wave.freq_envelope, FREQ_ENV_COLOR);
+
+        var volume_envelope_canvas = new drawingCanvas(envelopes, wave.volume_envelope);
+        volume_envelope_canvas.init(VOLUME_ENV_COLOR);
+        volume_envelope_canvas.getCanvasElement().addClass('volume active');
+        this.drawEnvelope(volume_envelope_canvas.getCanvasElement(), wave.volume_envelope, VOLUME_ENV_COLOR);
+        
+        var progress_canvas = new Canvas(envelopes).addClass('progress');
+
+        var string_canvas = new stringCanvas(string, wave);
+        string_canvas.init();
+        string_canvas.setProgressElem(progress_canvas);
+        
+    }
 
     this.initEnvelopes = function() {
         var adsr_container = $('<div>').addClass('adsr').appendTo(parent);
@@ -319,8 +352,6 @@ function waveCanvas(jq_elem, freqs) {
                     autostart = true;
                 }
                 freqs[wave_index].freq = parseInt(freq.val());
-                freqs[wave_index].volume_envelope = volume_envelope_canvas.getPoints();
-                freqs[wave_index].freq_envelope = freq_envelope_canvas.getPoints();
                 freqs[wave_index].duration = modal.find('.duration').val();
                 that.adjustGainLevels();
                 that.closeEnvelopeEditor();
@@ -385,15 +416,13 @@ function waveCanvas(jq_elem, freqs) {
         var freq_bg = new Canvas(draw_area);
         this.drawBackground(freq_bg);
         
-        freq_envelope_canvas = new drawingCanvas(draw_area);
+        freq_envelope_canvas = new drawingCanvas(draw_area, wave.freq_envelope);
         freq_envelope_canvas.init(FREQ_ENV_COLOR);
-        freq_envelope_canvas.setPoints(wave.freq_envelope);
         freq_envelope_canvas.getCanvasElement().addClass('freq');
         this.drawEnvelope(freq_envelope_canvas.getCanvasElement(), wave.freq_envelope, FREQ_ENV_COLOR);
 
-        volume_envelope_canvas = new drawingCanvas(draw_area);
+        volume_envelope_canvas = new drawingCanvas(draw_area, wave.volume_envelope);
         volume_envelope_canvas.init(VOLUME_ENV_COLOR);
-        volume_envelope_canvas.setPoints(wave.volume_envelope);
         volume_envelope_canvas.getCanvasElement().addClass('volume active');
         this.drawEnvelope(volume_envelope_canvas.getCanvasElement(), wave.volume_envelope, VOLUME_ENV_COLOR);
         
