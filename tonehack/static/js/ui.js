@@ -46,6 +46,7 @@ function waveCanvas(jq_elem, freqs) {
         for(var i = 0; i < waves.length; i++) {
             this.addWave(waves[i]);
         }
+        this.saveWaves();
     }
 
     this.setup = function() {
@@ -583,7 +584,7 @@ function waveCanvas(jq_elem, freqs) {
         var adjusted_waves = [];
         for(var i=0; i<waves.length; i++) {
             // deep copy of the waves only seems to work this way
-            var wave = new standingWave(waves_context, {
+            var wave = new standingWave({
                 freq: waves[i]['freq'] * multiplier,
                 volume_envelope: waves[i]['volume_envelope'],
                 freq_envelope: waves[i]['freq_envelope'],

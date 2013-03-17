@@ -165,7 +165,7 @@ function drawingCanvas(jq_elem, envelope) {
         // also, limit to between 0 and 1
         var value = Math.min(1, Math.max(0, 1 - points[index]));
         // ignore screwy values
-        if(isNaN(value) && i==0) value = 0;
+        if(isNaN(value)) value = 0;
         return value;
     }
 
