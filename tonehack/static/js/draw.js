@@ -30,15 +30,10 @@ function stringCanvas(jq_elem, wave, base_freq) {
     
     this.current_plot_coordinates = null;
     
-
     this.init = function() {
         this.context.fillStyle = "rgba(255,255,255, 0.3)";
         this.context.lineWidth = 2;
         this.context.strokeStyle = "#000";
-    };
-
-    this.setProgressElem = function(jq_progress_elem) {
-        this.progress_elem = jq_progress_elem;
     };
 
     this.getPlotCoordinates = function(time_diff) {
@@ -86,10 +81,24 @@ function stringCanvas(jq_elem, wave, base_freq) {
         this.context.clearRect(0, 0, this.context.width, this.context.height);
     }
 
+
+    this.setProgressElem = function(jq_progress_elem) {
+        jq_progress_elem.attr('height', 1);
+        jq_progress_elem.css('height', '100%');
+        jq_progress_elem.css('width', '100%');
+        this.progress_elem = jq_progress_elem.get(0).getContext("2d");
+        this.progress_elem.lineWidth = 2;
+        this.progress_elem.strokeStyle = "#a00";
+    };
     this.markProgress = function(time_diff) {
         if(this.progress_elem !== undefined) {
-            var percent_progress = 100 * (time_diff % this.wave.duration) / this.wave.duration;
-            //this.progress_elem.css('left', Math.floor(percent_progress) + "%");
+            var percent_progress = ((time_diff % this.wave.duration) / this.wave.duration);
+            var context = this.progress_elem;
+            context.clearRect(0, 0, context.width, 1);
+            context.beginPath();
+            context.moveTo(context.width*percent_progress, 0);
+            context.lineTo(context.width*percent_progress, 1);
+            context.stroke();
         }
     };
 }

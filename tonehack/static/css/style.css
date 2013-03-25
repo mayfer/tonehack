@@ -3,13 +3,13 @@ html, body { margin: 0; padding: 0; background: rgba(63, 60, 60, 1); color: #fff
 #header, #footer { background: #000; overflow: auto; }
 #tonehack { overflow: auto; margin-top: 20px; }
 #presets { width: 175px; float: left; margin: 0 5px 10px 0; }
-#overtones { width: 816px; float: left; }
+#overtones { width: 806px; float: left; background: #aaa; padding: 5px; }
 
 canvas { display: block; }
 .row { position: relative; overflow: auto; margin: 0 0 5px 0; }
-.row .envelopes { float: left; cursor: crosshair; display: inline-block; position: relative; height: 100px; background: #fff; width: 70%; }
-.row .string { float: left; width: 30%; height: 100px; background: #fff; }
-.row .envelopes .progress { height: 10px; width: 2px; background: #a00; position: absolute; bottom: 0; left: 0; }
+.row .envelopes { float: left; cursor: crosshair; display: inline-block; position: relative; height: 50px; background: #fff; width: 70%; }
+.row .string { float: left; width: 30%; height: 50px; margin: 0; background: #fff; }
+.row .envelopes .progress {  position: absolute; top: 0; left: 0; }
 
 #footer { padding: 20px; font-size: 12px; line-height: 16px; color: #aaa; text-align: center; }
 #footer a { border: none; }

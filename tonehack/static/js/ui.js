@@ -37,14 +37,34 @@ function waveCanvas(jq_elem, freqs) {
         this.initControls();
         this.initWaves();
         this.wave_rows = $('<div>').addClass('wave-rows').appendTo(this.jq_elem);
+        var that = this;
         
         $('<span>').addClass('duration').html('<label>Set all tone durations to: <input class="durations" type="text" />ms</label>').attr('href', '#').appendTo(jq_elem).find('input').keypress(function(e) {
             if(e.which == 13) {
                 var duration = parseInt($(this).val());
-                for(var i=0; i<this.waves.length; i++) {
-                    this.waves[i].duration = duration;
+                for(var i=0; i<that.waves.length; i++) {
+                    that.waves[i].duration = duration;
                 }
             }
+        });
+
+
+        var vol_mode = $('<a>').attr('href', '#').html('Volume').addClass('volume selected').appendTo(jq_elem);
+        var freq_mode = $('<a>').attr('href', '#').html('Pitch').addClass('freq').appendTo(jq_elem);
+
+        vol_mode.click(function(e){
+            e.preventDefault();
+            vol_mode.addClass('selected');
+            freq_mode.removeClass('selected');
+            $('.drawing-canvas.volume').addClass('active');
+            $('.drawing-canvas.freq').removeClass('active');
+        });
+        freq_mode.click(function(e){
+            e.preventDefault();
+            freq_mode.addClass('selected');
+            vol_mode.removeClass('selected');
+            $('.drawing-canvas.freq').addClass('active');
+            $('.drawing-canvas.volume').removeClass('active');
         });
 
         for(var i = 0; i < this.waves.length; i++) {
@@ -52,6 +72,35 @@ function waveCanvas(jq_elem, freqs) {
         }
         this.reset();
         this.saveWaves();
+
+        var add_tone = $('<a>')
+            .addClass('add-tone')
+            .attr('href', '#')
+            .html('Add a tone [+]')
+            .appendTo(jq_elem)
+            .on('click', function(e){
+                e.preventDefault();
+                var wave;
+                // use the duration of the first wave if possible
+                if(that.waves.length) {
+                    var last = that.waves.length - 1;
+                    wave = {
+                        freq: that.waves[last].freq * 2,
+                        duration: that.waves[last].duration,
+                        volume_envelope: that.waves[last].volume_envelope.slice(0),
+                        freq_envelope: that.waves[last].freq_envelope.slice(0),
+                    };
+                } else {
+                    wave = {
+                        freq: 220,
+                        duration: 1000,
+                    };
+                }
+                wave = new standingWave(wave);
+                that.waves.push(wave);
+                that.addWave(wave);
+            });
+
     }
 
     this.addWave = function(wave) {
@@ -72,7 +121,7 @@ function waveCanvas(jq_elem, freqs) {
         volume_envelope_canvas.getCanvasElement().addClass('volume active');
         this.drawEnvelope(volume_envelope_canvas.getCanvasElement(), wave.volume_envelope, VOLUME_ENV_COLOR);
         
-        var progress_elem = $('<div>').addClass('progress').appendTo(envelopes);
+        var progress_elem = new Canvas(envelopes).addClass('progress');
 
         var base_freq = 110;
         var string_canvas = new stringCanvas(string, wave, base_freq);
@@ -210,31 +259,6 @@ function waveCanvas(jq_elem, freqs) {
             $('<div>').addClass('freq').html(waves[i].freq + " Hz, "+(waves[i].duration/1000)+"s").appendTo(box);
         }
 
-        var add_tone = $('<a>')
-            .addClass('add-tone')
-            .attr('href', '#')
-            .html('Add a tone [+]')
-            .appendTo(adsr_container)
-            .on('click', function(e){
-                e.preventDefault();
-                // use the duration of the first wave if possible
-                if(freqs.length) {
-                    var last = freqs.length - 1;
-                    freqs.push({
-                        freq: freqs[last].freq * 2,
-                        duration: freqs[last].duration,
-                        volume_envelope: freqs[last].volume_envelope,
-                        freq_envelope: freqs[last].freq_envelope,
-                    });
-                } else {
-                    freqs.push({
-                        freq: 220,
-                        duration: 1000,
-                    });
-                }
-                that.reSetup();
-            });
-
         $(document).bind('keyup', function(e) {
             if(e.keyCode == 27) {
                 // escape pressed
@@ -328,25 +352,6 @@ function waveCanvas(jq_elem, freqs) {
         $('<div>').addClass('graph-label y-max').html('100%').appendTo(draw_area);
         
         var mode_switch = $('<div>').addClass('draw-mode').html('').appendTo(modal);
-        var vol_mode = $('<a>').attr('href', '#').html('Volume').addClass('volume selected').appendTo(mode_switch);
-        var freq_mode = $('<a>').attr('href', '#').html('Pitch').addClass('freq').appendTo(mode_switch);
-
-        vol_mode.click(function(e){
-            e.preventDefault();
-            vol_mode.addClass('selected');
-            freq_mode.removeClass('selected');
-            volume_envelope_canvas.getCanvasElement().addClass('active');
-            freq_envelope_canvas.getCanvasElement().removeClass('active');
-            freq.focus();
-        });
-        freq_mode.click(function(e){
-            e.preventDefault();
-            freq_mode.addClass('selected');
-            vol_mode.removeClass('selected');
-            freq_envelope_canvas.getCanvasElement().addClass('active');
-            volume_envelope_canvas.getCanvasElement().removeClass('active');
-            freq.focus();
-        });
 
         var freq_bg = new Canvas(draw_area);
         this.drawBackground(freq_bg);

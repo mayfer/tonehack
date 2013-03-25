@@ -15,11 +15,7 @@ soundWave = function(context, standing_waves) {
 
     this.standing_waves = standing_waves;
 
-    for (var j = 0; j < this.standing_waves.length; j++) {
-        this.xs[j] = 0;
-    }
-
-    this.node = context.createJavaScriptNode(1024, 0, 2);
+    this.node = context.createJavaScriptNode(1024, 1, 2);
 
     var that = this;
     this.node.onaudioprocess = function(e) { that.process(e) };
@@ -54,6 +50,11 @@ soundWave.prototype.process = function(e) {
 
             // square env. amplitude to convert it to a logarithmic scale which better suits our perception
             current_amplitude = envelope_amplitude * envelope_amplitude * wave.gain;
+
+            // accumulate wave vals for all tones
+            if(this.xs[j] == undefined) {
+                this.xs[j] = 0;
+            }
 
             // buffer value for given wave
             y = Math.sin(this.xs[j] + wave.phase);
