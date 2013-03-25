@@ -1,20 +1,15 @@
 X_INCREMENT = 10;
-    
-function Canvas(jq_elem) {
-    // create a canvas inside another element
-    // and set the height&width to fill the element
-    var canvas_jq = $('<canvas>');
-    var canvas = canvas_jq.get(0);
-    var width = jq_elem.innerWidth();
-    var height = jq_elem.innerHeight();
-    
+
+function setCanvasSize(canvas_jq, width, height) {
+    canvas_jq.css('width', width);
+    canvas_jq.css('height', height);
     canvas_jq.attr('width', width);
     canvas_jq.attr('height', height);
+    var canvas = canvas_jq.get(0);
     var context = canvas.getContext("2d");
     // make the h/w accessible from context obj as well
     context.width = width;
     context.height = height;
-    canvas_jq.appendTo(jq_elem);
 
     var devicePixelRatio = window.devicePixelRatio || 1;
     var backingStoreRatio = context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1;
@@ -34,19 +29,33 @@ function Canvas(jq_elem) {
         context.scale(ratio, ratio);
     }
 
+}
+    
+function Canvas(jq_elem) {
+    // create a canvas inside another element
+    // and set the height&width to fill the element
+    var canvas_jq = $('<canvas>');
+    var width = jq_elem.innerWidth();
+    var height = jq_elem.innerHeight();
+    
+    setCanvasSize(canvas_jq, width, height);
+
+    canvas_jq.appendTo(jq_elem);
     return canvas_jq;
 }
 
-function stringCanvas(waves_canvas, wave, base_freq) {
+function stringSubCanvas(waves_canvas, wave, base_freq, wave_height, spacer) {
     this.waves_canvas = waves_canvas;
     this.wave = wave;
-    //this.canvas_jq = new Canvas(this.jq_elem).addClass('string-canvas');
-    //this.context = this.canvas_jq.get(0).getContext("2d");
     this.context = this.waves_canvas.get(0).getContext("2d");
     this.standing = Math.PI / this.context.width; // resonant wavelength for canvas width
     this.relative_freq = this.standing * wave.freq / base_freq;
-    this.wave_height = 25; // this.context.height / 2;
-    this.speed = 14;
+    
+    this.wave_height = wave_height;
+    this.wave_halfheight = this.wave_height / 2;
+    this.spacer = spacer;
+
+    this.speed = 14; // whatevs
     
     this.current_plot_coordinates = null;
     
@@ -66,7 +75,7 @@ function stringCanvas(waves_canvas, wave, base_freq) {
         var volume_envelope_amplitude = this.wave.currentEnvelopeValue(time_diff / this.wave.duration);
         var current_relative_freq = Notes.relative_note(this.relative_freq, this.wave.currentPitchBend(time_diff / this.wave.duration));
         
-        var current_amplitude = Math.sin(this.step + this.wave.phase) * volume_envelope_amplitude * this.wave_height;
+        var current_amplitude = Math.sin(this.step + this.wave.phase) * volume_envelope_amplitude * this.wave_halfheight;
         var x = 0;
         var y = 0;
         var points = [];
@@ -85,10 +94,8 @@ function stringCanvas(waves_canvas, wave, base_freq) {
     };
 
     this.draw = function(time_diff, index) {
-        //var center = this.context.height / 2;
-        var center = index * (this.wave_height * 2 + 5) + 25;
+        var center = index * (this.wave_height + this.spacer) + this.wave_halfheight;
         var plot_coordinates = this.getPlotCoordinates(time_diff);
-        //this.context.fillRect(0, 0, this.context.width, this.context.height);
         this.context.beginPath();
         this.context.moveTo(0, center);
         for(var i = 1; i < plot_coordinates.length; i++) {
@@ -104,9 +111,6 @@ function stringCanvas(waves_canvas, wave, base_freq) {
 
 
     this.setProgressElem = function(jq_progress_elem) {
-        jq_progress_elem.attr('height', 1);
-        jq_progress_elem.css('height', '100%');
-        jq_progress_elem.css('width', '100%');
         this.progress_elem = jq_progress_elem.get(0).getContext("2d");
         this.progress_elem.lineWidth = 2;
         this.progress_elem.strokeStyle = "#a00";
@@ -115,10 +119,10 @@ function stringCanvas(waves_canvas, wave, base_freq) {
         if(this.progress_elem !== undefined) {
             var percent_progress = ((time_diff % this.wave.duration) / this.wave.duration);
             var context = this.progress_elem;
-            context.clearRect(0, 0, context.width, 1);
+            context.clearRect(0, 0, context.width, context.height);
             context.beginPath();
             context.moveTo(context.width*percent_progress, 0);
-            context.lineTo(context.width*percent_progress, 1);
+            context.lineTo(context.width*percent_progress, context.height);
             context.stroke();
         }
     };

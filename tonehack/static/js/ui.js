@@ -68,15 +68,15 @@ function waveCanvas(jq_elem, freqs) {
             $('.drawing-canvas.volume').removeClass('active');
         });
 
-        this.waves_canvas_parent = $('<div>').addClass('waves').css('height', (this.waves.length*55)+'px').appendTo(this.wave_rows);
+        this.waves_canvas_parent = $('<div>').addClass('waves').appendTo(this.wave_rows);
         this.waves_canvas = new Canvas(this.waves_canvas_parent);
         this.context = this.waves_canvas.get(0).getContext("2d");
 
         for(var i = 0; i < this.waves.length; i++) {
             this.addWave(this.waves[i]);
         }
-        this.reset();
         this.saveWaves();
+        this.resetWavesCanvas();
 
         var add_tone = $('<a>')
             .addClass('add-tone')
@@ -104,6 +104,7 @@ function waveCanvas(jq_elem, freqs) {
                 wave = new standingWave(wave);
                 that.waves.push(wave);
                 that.addWave(wave);
+                that.resetWavesCanvas();
             });
 
     }
@@ -111,6 +112,7 @@ function waveCanvas(jq_elem, freqs) {
     this.addWave = function(wave) {
         var row = $('<div>').addClass('row').appendTo(this.wave_rows);
         var envelopes = $('<div>').addClass('envelopes').appendTo(row);
+        var spacer_elem = $('<div>').addClass('spacer').appendTo(row);
         //var string = $('<div>').addClass('string').appendTo(row);
 
         var freq_bg = new Canvas(envelopes);
@@ -129,11 +131,35 @@ function waveCanvas(jq_elem, freqs) {
         var progress_elem = new Canvas(envelopes).addClass('progress');
 
         var base_freq = 110;
-        var string_canvas = new stringCanvas(this.waves_canvas, wave, base_freq);
-        string_canvas.init();
+        this.wave_height = envelopes.outerHeight();
+        this.spacer = row.outerHeight(true) - this.wave_height;
+
+        var string_canvas = new stringSubCanvas(this.waves_canvas, wave, base_freq, this.wave_height, this.spacer);
         string_canvas.setProgressElem(progress_elem);
         
         this.wave_canvases.push(string_canvas);
+    }
+
+    this.removeWave = function(index) {
+        this.waves.splice(index, 1);
+        this.wave_canvases.splice(index, 1);
+    }
+
+    this.resetWavesCanvas = function() {
+        var height = this.waves.length * (this.wave_height + this.spacer) - this.spacer;
+        var width = this.waves_canvas.innerWidth();
+        setCanvasSize(this.waves_canvas, width, height);
+
+        for(var i = 0; i < this.wave_canvases.length; i++) {
+            this.wave_canvases[i].init();
+        }
+
+        this.context.clearRect(0, 0, this.context.width, this.context.height);
+        this.time_diff = 0;
+        for(i = 0; i < this.wave_canvases.length; i++) {
+            this.wave_canvases[i].draw(0, i);
+            this.wave_canvases[i].markProgress(0);
+        }
     }
 
     this.setup = function() {
@@ -164,7 +190,8 @@ function waveCanvas(jq_elem, freqs) {
     }
 
     this.reSetup = function() {
-        jq_elem.html('');
+        this.jq_elem.html('');
+        this.wave_canvases = [];
         this.newsetup();
     }
 
@@ -218,18 +245,8 @@ function waveCanvas(jq_elem, freqs) {
         jq_elem.find('.controls .pause').removeClass('pause icon-pause').addClass('start icon-play');
         this.state = 'stopped';
         cancelAnimFrame(this.anim_frame);
-        this.reset()
+        this.resetWavesCanvas();
         this.soundwave.pause();
-    };
-
-    this.reset = function() {
-        this.context.clearRect(0, 0, this.context.width, this.context.height);
-        this.time_diff = 0;
-        for(i = 0; i < this.wave_canvases.length; i++) {
-            //  this.wave_canvases[i].clear();
-            this.wave_canvases[i].draw(0, i);
-            this.wave_canvases[i].markProgress(0);
-        }
     };
 
     this.initEnvelopes = function() {
