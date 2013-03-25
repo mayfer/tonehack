@@ -15,17 +15,37 @@ function Canvas(jq_elem) {
     context.width = width;
     context.height = height;
     canvas_jq.appendTo(jq_elem);
+
+    var devicePixelRatio = window.devicePixelRatio || 1;
+    var backingStoreRatio = context.webkitBackingStorePixelRatio || context.mozBackingStorePixelRatio || context.msBackingStorePixelRatio || context.oBackingStorePixelRatio || context.backingStorePixelRatio || 1;
+    var ratio = devicePixelRatio / backingStoreRatio;
+
+    // upscale the canvas if the two ratios don't match
+    if(devicePixelRatio !== backingStoreRatio) {
+        var oldWidth = canvas.width;
+        var oldHeight = canvas.height;
+
+        canvas.width = oldWidth * ratio;
+        canvas.height = oldHeight * ratio;
+
+        canvas.style.width = oldWidth + 'px';
+        canvas.style.height = oldHeight + 'px';
+
+        context.scale(ratio, ratio);
+    }
+
     return canvas_jq;
 }
 
-function stringCanvas(jq_elem, wave, base_freq) {
-    this.jq_elem = jq_elem;
+function stringCanvas(waves_canvas, wave, base_freq) {
+    this.waves_canvas = waves_canvas;
     this.wave = wave;
-    this.canvas_jq = new Canvas(this.jq_elem).addClass('string-canvas');
-    this.context = this.canvas_jq.get(0).getContext("2d");
+    //this.canvas_jq = new Canvas(this.jq_elem).addClass('string-canvas');
+    //this.context = this.canvas_jq.get(0).getContext("2d");
+    this.context = this.waves_canvas.get(0).getContext("2d");
     this.standing = Math.PI / this.context.width; // resonant wavelength for canvas width
     this.relative_freq = this.standing * wave.freq / base_freq;
-    this.wave_height = this.context.height / 2;
+    this.wave_height = 25; // this.context.height / 2;
     this.speed = 14;
     
     this.current_plot_coordinates = null;
@@ -64,10 +84,11 @@ function stringCanvas(jq_elem, wave, base_freq) {
         return points;
     };
 
-    this.draw = function(time_diff) {
-        var center = this.context.height / 2;
+    this.draw = function(time_diff, index) {
+        //var center = this.context.height / 2;
+        var center = index * (this.wave_height * 2 + 5) + 25;
         var plot_coordinates = this.getPlotCoordinates(time_diff);
-        this.context.fillRect(0, 0, this.context.width, this.context.height);
+        //this.context.fillRect(0, 0, this.context.width, this.context.height);
         this.context.beginPath();
         this.context.moveTo(0, center);
         for(var i = 1; i < plot_coordinates.length; i++) {

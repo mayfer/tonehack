@@ -10,6 +10,8 @@ canvas { display: block; }
 .row .envelopes { float: left; cursor: crosshair; display: inline-block; position: relative; height: 50px; background: #fff; width: 70%; }
 .row .string { float: left; width: 30%; height: 50px; margin: 0; background: #fff; }
 .row .envelopes .progress {  position: absolute; top: 0; left: 0; }
+.wave-rows { position: relative; }
+.waves { position: absolute; top: 0; right: 0; width: 30%; background: #fff; }
 
 #footer { padding: 20px; font-size: 12px; line-height: 16px; color: #aaa; text-align: center; }
 #footer a { border: none; }
@@ -25,11 +27,6 @@ canvas { display: block; }
 #piano { margin: 20px 0; }
 
 .container { width: 1000px; margin: 0 auto; position: relative; }
-.wave-canvas { position: relative; width: 100%; margin-bottom: 25px; }
-.parent-canvas { display: block; width: 100%; margin: 0 auto; border: 1px solid #fff; background: #fff; border-radius: 2px; z-index: 10; position: relative; }
-.parent-canvas > canvas { position: absolute; top: 0; left: 0; }
-.waves { height: 100%; width: 75%; margin-left: 25%; }
-.adsr { height: 100%; width: 25%; margin-right: 80%; background: #ddd; position: relative; }
             
 a { color: #a50; text-decoration: none; border-bottom: 1px solid #ff8000; }
 a:hover { color: #b20; }
@@ -46,10 +43,6 @@ a:hover { color: #b20; }
 
 .labels { position: relative; }
 
-.adsr-title { position: absolute; top: 10px; left: 20px; color: #000; font-size: 12px; line-height: 12px; }
-.adsr-title .tip { font-size: 10px; color: #444; }
-.adsr-link, .adsr-link:hover { display: block; position: absolute; border-bottom: 2px solid #555; border-left: 2px solid #555; background: #eee; }
-.adsr-link:hover { background: #fff; }
 .adsr-link .freq { position: absolute; top: 5px; right: 5px; color: #000; font-size: 11px; text-shadow: 1px 0 0 #fff, 0 1px 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff; }
 
 .adsr-link canvas { position: absolute; top: 0; left: 0; }
