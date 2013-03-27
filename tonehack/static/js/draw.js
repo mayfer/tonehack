@@ -1,4 +1,4 @@
-X_INCREMENT = 10;
+X_INCREMENT = 5;
 
 function setCanvasSize(canvas_jq, width, height) {
     canvas_jq.css('width', width);
@@ -128,32 +128,34 @@ function stringSubCanvas(waves_canvas, wave, base_freq, wave_height, spacer) {
     };
 }
 
-function superposedStringCanvas(jq_elem, strings) {
-    this.jq_elem = jq_elem;
+function superposedStringCanvas(waves_canvas, strings, wave_height) {
+    this.waves_canvas = waves_canvas;
     this.strings = strings;
-    this.canvas_jq = new Canvas(this.jq_elem).addClass('string-canvas');
-    this.context = this.canvas_jq.get(0).getContext("2d");
-    this.num_steps = Math.round(context.width / X_INCREMENT);
-    var coords, current_coords;
+    this.context = this.waves_canvas.get(0).getContext("2d");
+    this.wave_height = wave_height;
+    this.wave_halfheight = this.wave_height / 2;
+    this.center = this.wave_halfheight;
+    this.num_steps = Math.floor(this.context.width / X_INCREMENT);
+    this.divide = strings.length / 2;
     
     this.draw = function(time_diff) {
         this.context.fillRect(0, 0, this.context.width, this.context.height);
         this.context.beginPath();
-        this.context.moveTo(0, position);
-        for(var i = 0; i < num_steps; i++) {
-            coords = {from: {x: 0, y: 0}, to: {x: 0, y: 0}};
+        this.context.moveTo(0, this.center);
+        for(var i = 0; i <= this.num_steps; i++) {
+            var coords = {x: 0, y: 0};
             for(var j = 0; j < this.strings.length; j++) {
-                current_coords = this.strings[j].getPlotCoordinates(time_diff);
+                var current_coords = this.strings[j].getPlotCoordinates(time_diff);
                 // x is same for all anyways
-                coords.from.x = current_coords[i].from.x;
-                coords.from.y += current_coords[i].from.y;
-                coords.to.x = current_coords[i].to.x;
-                coords.to.y += current_coords[i].to.y;
+                coords.x = current_coords[i].x;
+                coords.y += current_coords[i].y;
             }
-            this.context.lineTo(coords.to.x, coords.to.y + position);
+            this.context.lineTo(coords.x, coords.y/this.divide + this.center);
         }
         this.context.stroke();
     };
+
+    return this;
 }
     
 function drawingCanvas(jq_elem, envelope) {

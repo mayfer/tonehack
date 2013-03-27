@@ -3,15 +3,19 @@ html, body { margin: 0; padding: 0; background: rgba(63, 60, 60, 1); color: #fff
 #header, #footer { background: #000; overflow: auto; }
 #tonehack { overflow: auto; margin-top: 20px; }
 #presets { width: 175px; float: left; margin: 0 5px 10px 0; }
-#overtones { width: 806px; float: left; background: #aaa; padding: 5px; }
+#overtones { position: relative; background: #aaa; padding: 5px; }
 
 canvas { display: block; }
-.row { position: relative; overflow: auto; margin: 0 0 0 0; }
-.row .envelopes { float: left; cursor: crosshair; display: inline-block; position: relative; height: 80px; background: #fff; width: 70%; }
+.row { position: relative; margin: 0 0 0 0; }
+.row .controls { float: left; position: relative; height: 80px; background: #999; width: 20%; }
+.row .envelopes { float: left; cursor: crosshair; display: block; position: relative; height: 80px; background: #fff; width: 60%; }
 .row .envelopes .progress {  position: absolute; top: 0; left: 0; }
-.row .spacer { width: 100%; height: 5px; background: #000; clear: both; }
-.wave-rows { position: relative; }
-.waves { position: absolute; top: 0; right: 0; width: 30%; background: #fff; }
+.row .spacer { margin: 0 -1px; height: 5px; background: #aaa; border-top: 1px solid #555; border-bottom: 1px solid #ddd; clear: both; }
+.row .spacer.last { border-bottom: none; }
+.row.superposed .controls { width: 80%; }
+
+.wave-rows { position: relative; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right: 1px solid #555; }
+.waves { position: absolute; top: 0; right: 0; width: 20%; background: #fff; }
 
 #footer { padding: 20px; font-size: 12px; line-height: 16px; color: #aaa; text-align: center; }
 #footer a { border: none; }
