@@ -46,7 +46,7 @@ function waveCanvas(jq_elem, freqs) {
         this.context = this.waves_canvas.get(0).getContext("2d");
 
         var superposed_row = $('<div>').addClass('row superposed').appendTo(this.wave_rows);
-        var superposed_controls = $('<div>').addClass('controls').appendTo(superposed_row);
+        var superposed_controls = $('<div>').addClass('wave-controls').appendTo(superposed_row);
         $('<span>').addClass('duration').html('<label>Set all tone durations to: <input class="durations" type="text" />ms</label>').attr('href', '#').appendTo(superposed_controls).find('input').keypress(function(e) {
             if(e.which == 13) {
                 var duration = parseInt($(this).val());
@@ -113,13 +113,41 @@ function waveCanvas(jq_elem, freqs) {
                 that.resetWavesCanvas();
             });
 
+        this.wave_rows.bind('mouseup', function(e) {
+            that.saveWaves();
+        });
     }
 
     this.addWave = function(wave) {
         var row = $('<div>').addClass('row').appendTo(this.wave_rows);
-        var controls = $('<div>').addClass('controls').appendTo(row);
+        var controls_container = $('<div>').addClass('wave-controls').appendTo(row);
+        var controls = $('<div>').addClass('wave-controls-inner').appendTo(controls_container);
         var envelopes = $('<div>').addClass('envelopes').appendTo(row);
         var spacer_elem = $('<div>').addClass('spacer').appendTo(row);
+
+        $('<label>').html('<span>Frequency:</span>').appendTo(controls)
+            .append(
+                $('<input type="text" />').addClass('frequency').val(wave.freq).keypress(function(e) {
+                    if(e.which == 13) {
+                        var val = parseInt($(this).val());
+                        wave.freq = val;
+                        $(this).blur();
+                    }
+                })
+            )
+            .append('Hz');
+
+        $('<label>').html('<span>Duration:</span>').appendTo(controls)
+            .append(
+                $('<input type="text" />').addClass('duration').val(wave.duration).keypress(function(e) {
+                    if(e.which == 13) {
+                        var duration = parseInt($(this).val());
+                        wave.duration = duration;
+                        $(this).blur();
+                    }
+                })
+            )
+            .append('ms');
 
         var freq_bg = new Canvas(envelopes);
         this.drawBackground(freq_bg);

@@ -55,7 +55,7 @@ function stringSubCanvas(waves_canvas, wave, base_freq, wave_height, spacer) {
     this.wave_halfheight = this.wave_height / 2;
     this.spacer = spacer;
 
-    this.speed = 14; // whatevs
+    this.speed = 5; // whatevs
     
     this.current_plot_coordinates = null;
     
@@ -136,7 +136,7 @@ function superposedStringCanvas(waves_canvas, strings, wave_height) {
     this.wave_halfheight = this.wave_height / 2;
     this.center = this.wave_halfheight;
     this.num_steps = Math.floor(this.context.width / X_INCREMENT);
-    this.divide = strings.length / 2;
+    this.divide = strings.length / 3;
     
     this.draw = function(time_diff) {
         this.context.fillRect(0, 0, this.context.width, this.context.height);
