@@ -3,21 +3,25 @@ html, body { margin: 0; padding: 0; background: rgba(63, 60, 60, 1); color: #fff
 #header, #footer { background: #000; overflow: auto; }
 #tonehack { overflow: auto; margin-top: 20px; }
 #presets { width: 175px; float: left; margin: 0 5px 10px 0; }
-#overtones { position: relative; background: #aaa; padding: 5px; }
+#overtones { position: relative; background: #aaa; padding: 5px; border-radius: 2px; }
 
 canvas { display: block; }
 .row { position: relative; margin: 0 0 0 0; }
 .row .wave-controls { float: left; position: relative; height: 80px; background: #999; width: 20%; font-size: 12px; line-height: 20px; }
-.row .wave-controls .wave-controls-inner { padding: 10px; }
+.row .wave-controls .wave-controls-inner { padding: 20px 10px; }
 .row.superposed .wave-controls { width: 80%; }
 
 .row .envelopes { float: left; cursor: crosshair; display: block; position: relative; height: 80px; background: #fff; width: 60%; }
 .row .envelopes .progress {  position: absolute; top: 0; left: 0; }
 .row .spacer { margin: 0 -1px; height: 5px; background: #aaa; border-top: 1px solid #555; border-bottom: 1px solid #ddd; clear: both; }
 .row .spacer.last { border-bottom: none; }
+.row .remove { display: block; width: 12px; height: 12px; position: absolute; top: 3px; left: 3px; line-height: 12px; border: none; color: #888; background: #ddd; border-radius: 6px; font-weight: bold; text-align: center; }
+.row .remove:hover { background: #f90; }
 
 .wave-rows { position: relative; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right: 1px solid #555; }
 .waves { position: absolute; top: 0; right: 0; width: 20%; background: #fff; }
+
+.wave-label { font-size: 12px; color: #888; position: absolute; }
 
 #footer { padding: 20px; font-size: 12px; line-height: 16px; color: #aaa; text-align: center; }
 #footer a { border: none; }
@@ -38,14 +42,17 @@ a { color: #a50; text-decoration: none; border-bottom: 1px solid #ff8000; }
 a:hover { color: #b20; }
 #footer a:hover { color: #c90; }
             
-.controls { font-size: 14px; line-height: 25px; height: 25px; }
-.controls .start:after { content: " Preview"; }
+.controls { font-size: 14px; line-height: 25px; height: 25px; padding: 0 0 5px 0; }
+.controls .start:after { content: " Preview tone"; }
 .controls .pause:after { content: " Stop"; }
-.controls a:hover { color: #fff;  }
-.controls a { display: inline-block; min-width: 15px; text-align: center; margin-right: 10px; margin-bottom: 0px; padding: 0 8px; color: #ccc; border: none; display: inline-block; text-decoration: none;}
+.controls a { display: inline-block; min-width: 15px; text-align: center; padding: 0 8px; color: #fff; border: none; display: inline-block; text-decoration: none; text-shadow: 0 1px 0 #000; background: #444; border-radius: 2px; }
+.controls a:hover { color: #fff; text-shadow: 0 1px 0 #000, 0 2px 0 #b20; }
 .controls a.tab { float: right; margin-right: 20px;  background: rgba(255,255,255,0.6); position: relative; z-index: 1000;  padding: 0 15px; color: #000; z-index: 5; }
 .controls a.tab:hover { top: 0; }
 .controls a.tab.selected { float: right; margin-right: 20px;  background: #fff;  margin-bottom: -3px; color: #000; }
+
+.controls a.quick-help { float: right; font-size: 12px; background: #777; }
+.controls a.quick-help span { display: inline-block; height: 10px; width: 10px; border-radius: 5px; background: #444; font-size: 10px; line-height: 10px; text-align: center; }
 
 .labels { position: relative; }
 
@@ -53,7 +60,16 @@ a:hover { color: #b20; }
 
 .adsr-link canvas { position: absolute; top: 0; left: 0; }
             
-.add-tone { position: absolute; bottom: 15px; right: 15px; font-size: 12px; }
+.setting { font-size: 12px; line-height: 16px; padding: 0 3px; }
+.add-tone { position: absolute; top: 10px; left: 10px; background: #ddd; border-radius: 2px; }
+.add-tone:hover { background: #fff; }
+.all-durations { position: absolute; bottom: 10px; left: 10px; }
+.envelope-switcher { position: absolute; bottom: 10px; left: 400px; }
+.envelope-switcher a { color: #555; border-bottom: 1px solid #555; border-radius: 1px; background: #ddd; padding: 0 5px; line-height: 16px; }
+.envelope-switcher a:hover { background: #fff; }
+.envelope-switcher a.volume.selected { color: #a50; background: #eee; border: 2px solid #a50; border-right: 1px solid #555; }
+.envelope-switcher a.freq.selected { color: #090; background: #eee; border: 2px solid #090; border-left: 1px solid #555; }
+ 
 
 .wave-rows input { width: 50px; background: rgba(255,255,255,0.5); border: 1px solid rgba(0,0,0,0.3); margin: 0 2px; padding: 2px 3px; text-align: right; color: #333; }
 .wave-rows input:focus { background: #fff; }
@@ -68,8 +84,9 @@ a:hover { color: #b20; }
 .draw-mode a.volume.selected, .draw-mode a.volume:hover { color: #aa6000; border-bottom: 2px solid #aa6000; }
 .draw-mode a.freq.selected, .draw-mode a.freq:hover { color: #00aa00; border-bottom: 2px solid #00aa00; }
 
-h1, h2 { padding: 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FF8000, 0 0 70px #FF8000, 0 0 80px #FF8000, 0 0 100px #FF8000, 0 0 150px #FF8000; color: #fff; }
-h1 { margin: 30px 0 5px 0; font-size: 25px; line-height: 28px; text-align: right; }
-h2 { font-size: 16px; line-height: 20px; margin: 0; text-align: right; }
-h2 span.lt { font-size: 25px; }
+#header h1, #header h2 { padding: 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FF8000, 0 0 70px #FF8000, 0 0 80px #FF8000, 0 0 100px #FF8000, 0 0 150px #FF8000; color: #fff; }
+#header h1 { margin: 30px 0 5px 0; font-size: 25px; line-height: 28px; text-align: right; }
+#header h2 { font-size: 16px; line-height: 20px; margin: 0; text-align: right; }
+#header h2 span.lt { font-size: 25px; }
 
+#help { display: none; position: absolute; top: 90px; left: 50%; margin-left: -300px; width: 550px; padding: 20px; background: #ddd; z-index: 500; border-radius: 10px; box-shadow: 0 0 20px 0 #000; border: 5px solid #666; color: #000; }

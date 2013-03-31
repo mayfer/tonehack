@@ -55,7 +55,7 @@ function stringSubCanvas(waves_canvas, wave, base_freq, wave_height, spacer) {
     this.wave_halfheight = this.wave_height / 2;
     this.spacer = spacer;
 
-    this.speed = 5; // whatevs
+    this.speed = 2; // whatevs
     
     this.current_plot_coordinates = null;
     
@@ -163,7 +163,7 @@ function drawingCanvas(jq_elem, envelope) {
     var envelope = envelope;
     var canvas_jq = new Canvas(jq_elem).addClass('drawing-canvas');
     var canvas = canvas_jq.get(0);
-    var resolution = 512;
+    var resolution = 900;
     var ctx = canvas.getContext("2d");
     var that = this;
     var points = new Float32Array(resolution); // inverse y vals
