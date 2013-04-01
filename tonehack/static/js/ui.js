@@ -23,10 +23,18 @@ function waveCanvas(jq_elem, freqs) {
         }
         this.options = $.extend({}, default_options, options_input); 
 
+        if (! window.AudioContext) {
+            if (! window.webkitAudioContext) {
+                alert('Dude, your browser is totally not supported. Upgrade already.');
+                return;
+            }
+            window.AudioContext = window.webkitAudioContext;
+        }
+
         if(this.options.audio_context) {
             this.audio_context = this.options.audio_context;
         } else {
-            this.audio_context = new webkitAudioContext();
+            this.audio_context = new AudioContext();
         }
 
         this.setup();
@@ -100,6 +108,9 @@ function waveCanvas(jq_elem, freqs) {
                 for(var i=0; i<that.waves.length; i++) {
                     that.waves[i].duration = duration;
                 }
+                $('.duration').val(duration);
+                $(this).val('');
+                that.saveWaves();
             }
         });
        var add_tone = $('<a>').addClass('add-tone setting')
@@ -400,9 +411,16 @@ function waveCanvas(jq_elem, freqs) {
         var controls = $('<div>').addClass('controls');
         $('<a>').addClass('start icon-play').attr('href', '#').appendTo(controls);
         controls.append(
+            $('<a>').addClass('show-presets').html("<span>▼</span> Presets").attr('href', '#').on('click', function(e){
+                e.preventDefault();
+                $('#presets').css('top', $(this).position().top + $(this).height() + 'px');
+                $('#presets').toggle();
+            })
+        );
+        controls.append(
             $('<a>').addClass('quick-help').html("<span>?</span> Quick Help").attr('href', '#').on('click', function(e){
                 e.preventDefault();
-                help.show();
+                $('#help').show();
             })
         );
         

@@ -31,6 +31,7 @@
                             e.preventDefault();
                             canvas_overtones.stop();
                             canvas_overtones.loadPreset(preset);
+                            $('#presets').hide();
                         });
                     });
                 });
@@ -62,9 +63,8 @@
             <div id='piano'> </div>
             <div id='tonehack'>
                 <div id='overtones' class='wave-canvas'> </div>
-            </div>
-            <div id='presets'>
-                <h3>Presets</h3>
+                <div id='presets'>
+                </div>
             </div>
             
             <div id='article'>
