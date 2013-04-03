@@ -76,12 +76,14 @@ function waveCanvas(jq_elem, freqs) {
         var vol_mode = $('<a>').attr('href', '#').html('Volume envelope').addClass('volume selected').appendTo(envelope_switcher);
         var freq_mode = $('<a>').attr('href', '#').html('Pitch bend').addClass('freq').appendTo(envelope_switcher);
 
+        this.drawing_mode = 'volume';
         vol_mode.click(function(e){
             e.preventDefault();
             vol_mode.addClass('selected');
             freq_mode.removeClass('selected');
             $('.drawing-canvas.volume').addClass('active');
             $('.drawing-canvas.freq').removeClass('active');
+            that.drawing_mode = 'volume';
         });
         freq_mode.click(function(e){
             e.preventDefault();
@@ -89,6 +91,7 @@ function waveCanvas(jq_elem, freqs) {
             vol_mode.removeClass('selected');
             $('.drawing-canvas.freq').addClass('active');
             $('.drawing-canvas.volume').removeClass('active');
+            that.drawing_mode = 'pitch';
         });
 
 
@@ -199,15 +202,6 @@ function waveCanvas(jq_elem, freqs) {
             )
             .append('ms');
 
-        $('<a>').html('reset').appendTo(controls).addClass('reset');
-
-        $('<label>').html('Repeat').appendTo(controls)
-            .prepend(
-                $('<input type="checkbox" />').addClass('repeat').prop('checked', wave.repeat).on('change', function(e) {
-                    wave.repeat = $(this).prop('checked');
-                })
-            )
-
 
         var freq_bg = new Canvas(envelopes);
         this.drawBackground(freq_bg);
@@ -230,6 +224,30 @@ function waveCanvas(jq_elem, freqs) {
 
         var string_canvas = new stringSubCanvas(this.waves_canvas, wave, base_freq, this.wave_height, this.spacer);
         string_canvas.setProgressElem(progress_elem);
+
+        $('<a>').html('reset').appendTo(controls).addClass('reset').on('click', function(e){
+            if(that.drawing_mode == 'volume') {
+                for(var i = 0; i < wave.volume_envelope.length; i++) {
+                    wave.volume_envelope[i] = 0.5;
+                }
+                volume_envelope_canvas.sync();
+                that.drawEnvelope(volume_envelope_canvas.getCanvasElement(), wave.volume_envelope, VOLUME_ENV_COLOR);
+            } else {
+                for(var i = 0; i < wave.freq_envelope.length; i++) {
+                    wave.freq_envelope[i] = 0.5;
+                }
+                freq_envelope_canvas.sync();
+                that.drawEnvelope(freq_envelope_canvas.getCanvasElement(), wave.freq_envelope, FREQ_ENV_COLOR);
+            }
+            that.saveWaves();
+        });
+
+        $('<label>').html('Repeat').appendTo(controls)
+            .prepend(
+                $('<input type="checkbox" />').addClass('repeat').prop('checked', wave.repeat).on('change', function(e) {
+                    wave.repeat = $(this).prop('checked');
+                })
+            )
 
         $('.spacer').removeClass('last');
         spacer_elem.addClass('last');

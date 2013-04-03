@@ -175,21 +175,23 @@ function drawingCanvas(jq_elem, envelope) {
     var draw = false;
     var prev_position = null;
     
-    for(var j=0; j<resolution; j++) {
-        if(envelope != undefined) {
-            // take mod of length just in case envelope is somehow smaller than resolution
-            points[j] = 1 - envelope[j%envelope.length];
-        } else {
-            points[j] = 0.5;
+    this.sync = function() {
+        for(var j=0; j<resolution; j++) {
+            if(envelope != undefined) {
+                // take mod of length just in case envelope is somehow smaller than resolution
+                points[j] = 1 - envelope[j%envelope.length];
+            } else {
+                points[j] = 0.5;
+            }
         }
-    }
 
-    // truncate envelope if it's somehow larger than the expected size
-    while(envelope.length > resolution) {
-        envelope.shift();
-    }
-    for(var j=0; j<resolution; j++) {
-        envelope[j] = 1 - points[j];
+        // truncate envelope if it's somehow larger than the expected size
+        while(envelope.length > resolution) {
+            envelope.shift();
+        }
+        for(var j=0; j<resolution; j++) {
+            envelope[j] = 1 - points[j];
+        }
     }
 
     this.getCanvasElement = function() {
@@ -214,6 +216,7 @@ function drawingCanvas(jq_elem, envelope) {
     }
 
     this.init = function(color) {
+        this.sync();
         this.resetLineHistory();
         ctx.lineWidth = 2;
         ctx.lineCap = "round";
