@@ -72,7 +72,7 @@ function standingWave(options) {
         var raw_decimal_index = envelope.length * percent_progress;
         var raw_index = Math.floor(raw_decimal_index);
         
-        if(true) { // envelope_options.repeat) {
+        if(this.repeat) {
             index = raw_index % envelope.length;
             decimal_index = raw_decimal_index % envelope.length;
         } else {

@@ -49,7 +49,6 @@ function stringSubCanvas(waves_canvas, wave, base_freq, wave_height, spacer) {
     this.wave = wave;
     this.context = this.waves_canvas.get(0).getContext("2d");
     this.standing = Math.PI / this.context.width; // resonant wavelength for canvas width
-    this.relative_freq = this.standing * wave.freq / base_freq;
     
     this.wave_height = wave_height;
     this.wave_halfheight = this.wave_height / 2;
@@ -66,6 +65,7 @@ function stringSubCanvas(waves_canvas, wave, base_freq, wave_height, spacer) {
     };
 
     this.getPlotCoordinates = function(time_diff) {
+        this.relative_freq = this.standing * wave.freq / base_freq;
         if(this.last_plot === time_diff) {
             // no need to recalculate
             return this.current_plot_coordinates;

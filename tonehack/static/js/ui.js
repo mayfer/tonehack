@@ -246,6 +246,7 @@ function waveCanvas(jq_elem, freqs) {
             .prepend(
                 $('<input type="checkbox" />').addClass('repeat').prop('checked', wave.repeat).on('change', function(e) {
                     wave.repeat = $(this).prop('checked');
+                    that.saveWaves();
                 })
             )
 
@@ -481,6 +482,7 @@ function waveCanvas(jq_elem, freqs) {
                 volume_envelope: this.waves[i]['volume_envelope'],
                 freq_envelope: this.waves[i]['freq_envelope'],
                 duration: this.waves[i]['duration'],
+                repeat: this.waves[i]['repeat'],
             })
             adjusted_waves.push(wave);
         }
