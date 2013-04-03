@@ -199,6 +199,16 @@ function waveCanvas(jq_elem, freqs) {
             )
             .append('ms');
 
+        $('<a>').html('reset').appendTo(controls).addClass('reset');
+
+        $('<label>').html('Repeat').appendTo(controls)
+            .prepend(
+                $('<input type="checkbox" />').addClass('repeat').prop('checked', wave.repeat).on('change', function(e) {
+                    wave.repeat = $(this).prop('checked');
+                })
+            )
+
+
         var freq_bg = new Canvas(envelopes);
         this.drawBackground(freq_bg);
 

@@ -7,7 +7,7 @@ html, body { margin: 0; padding: 0; background: rgba(63, 60, 60, 1); color: #fff
 canvas { display: block; }
 .row { position: relative; margin: 0 0 0 0; }
 .row .wave-controls { float: left; position: relative; height: 80px; background: #999; width: 20%; font-size: 12px; line-height: 20px; }
-.row .wave-controls .wave-controls-inner { padding: 20px 10px; }
+.row .wave-controls .wave-controls-inner { padding: 15px 10px; }
 .row.superposed .wave-controls { width: 80%; }
 
 .row .envelopes { float: left; cursor: crosshair; display: block; position: relative; height: 80px; background: #fff; width: 60%; }
@@ -73,9 +73,11 @@ a:hover { color: #b20; }
  
 
 .wave-rows input { width: 50px; background: rgba(255,255,255,0.5); border: 1px solid rgba(0,0,0,0.3); margin: 0 2px; padding: 2px 3px; text-align: right; color: #333; }
+.wave-rows input[type="checkbox"] { width: 15px; margin: 0 !important; padding: 0; }
 .wave-rows input:focus { background: #fff; }
-.wave-rows label { display: block; }
+.wave-rows label { display: block; text-align: left; line-height: 20px; }
 .wave-rows label span { display: inline-block; width: 90px; }
+.wave-rows .reset { float: right; }
 
 .drawing-canvas { position: absolute; top: 0; left: 0; opacity: 0.3; }
 .drawing-canvas.active { z-index: 100; opacity: 1; }

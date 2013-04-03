@@ -7,6 +7,7 @@ function standingWave(options) {
         duration: 1000,
         phase: 0,
         gain: 1,
+        repeat: true,
     }
     var options = $.extend({}, default_options, options); 
     
@@ -23,6 +24,7 @@ function standingWave(options) {
     this.freq_envelope = freq_envelope;
     this.phase = phase;
     this.gain = gain;
+    this.repeat = options.repeat;
 
     this.sin = function(x, rad_diff, amplitude) {
         return -amplitude * Math.sin(rad_diff * x);
@@ -33,7 +35,7 @@ function standingWave(options) {
         var raw_index = Math.floor(raw_decimal_index);
         var index, decimal_index;
         
-        if(true) { // envelope_options.repeat) {
+        if(this.repeat) {
             index = raw_index % envelope.length;
             decimal_index = raw_decimal_index % envelope.length;
         } else {

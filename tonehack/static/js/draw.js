@@ -117,7 +117,12 @@ function stringSubCanvas(waves_canvas, wave, base_freq, wave_height, spacer) {
     };
     this.markProgress = function(time_diff) {
         if(this.progress_elem !== undefined) {
-            var percent_progress = ((time_diff % this.wave.duration) / this.wave.duration);
+            var percent_progress;
+            if(this.wave.repeat || time_diff < this.wave.duration) {
+                percent_progress = ((time_diff % this.wave.duration) / this.wave.duration);
+            } else {
+                percent_progress = 1;
+            }
             var context = this.progress_elem;
             context.clearRect(0, 0, context.width, context.height);
             context.beginPath();
