@@ -155,7 +155,11 @@ function superposedStringCanvas(waves_canvas, strings, wave_height) {
                 coords.x = current_coords[i].x;
                 coords.y += current_coords[i].y;
             }
-            this.context.lineTo(coords.x, coords.y/this.divide + this.center);
+
+            coords.y = coords.y / this.divide;
+            coords.y = Math.min(coords.y, this.wave_halfheight);
+            coords.y = Math.max(coords.y, -this.wave_halfheight);
+            this.context.lineTo(coords.x, coords.y + this.center);
         }
         this.context.stroke();
     };

@@ -100,7 +100,7 @@ function waveCanvas(jq_elem, freqs) {
         }
         this.saveWaves();
 
-        this.superposed_canvas = superposedStringCanvas(this.waves_canvas, this.wave_canvases, superposed_row.height());
+        this.superposed_canvas = superposedStringCanvas(this.waves_canvas, this.wave_canvases, superposed_row.height()-spacer.height());
         this.resetWavesCanvas();
 
         var resulting_wave_label = $('<div>').addClass('wave-label resulting-wave').html('Resulting wave').appendTo(this.wave_rows).css({top: '5px', right: '5px'});
