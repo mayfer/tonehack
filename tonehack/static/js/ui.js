@@ -131,6 +131,7 @@ function waveCanvas(jq_elem, freqs) {
                         duration: that.waves[last].duration,
                         volume_envelope: that.waves[last].volume_envelope.slice(0),
                         freq_envelope: that.waves[last].freq_envelope.slice(0),
+                        repeat: that.waves[last].repeat,
                     };
                 } else {
                     wave = {
@@ -289,6 +290,7 @@ function waveCanvas(jq_elem, freqs) {
                 freq_envelope: this.waves[j].freq_envelope,
                 volume_envelope: this.waves[j].volume_envelope,
                 duration: this.waves[j].duration,
+                repeat: this.waves[j].repeat,
             };
             wave_data.push(wave_struct);
         }
@@ -309,6 +311,7 @@ function waveCanvas(jq_elem, freqs) {
                 volume_envelope: freqobj['volume_envelope'],
                 freq_envelope: freqobj['freq_envelope'],
                 duration: freqobj['duration'],
+                repeat: freqobj['repeat'],
             }));
         });
         this.soundwave = new soundWave(this.audio_context, this.waves);
