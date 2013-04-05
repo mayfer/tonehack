@@ -13,7 +13,13 @@ middleware here, or combine a Django application with an application of another
 framework.
 
 """
-import os
+import os, sys
+
+#Calculate the path based on the location of the WSGI script.
+apache_configuration = os.path.dirname(__file__)
+project = os.path.dirname(apache_configuration)
+if project not in sys.path:
+    sys.path.append(project)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tonehack.settings")
 
