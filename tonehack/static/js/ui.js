@@ -124,11 +124,31 @@ function waveCanvas(jq_elem, freqs) {
             .appendTo(action_buttons)
             .on('click', function(e){
                 e.preventDefault();
+                var orig_html = $('#save').html();
                 $('#save').show();
                 $('#save').find('input').focus();
                 $('#save .close').one('click', function(e){
                     e.preventDefault();
                     $('#save').hide();
+                    $('#save').html(orig_html);
+                });
+                $('#save form').on('submit', function(e){
+                    e.preventDefault();
+                    var form = $(this);
+                    $.postJSON(
+                        form.data('url'),
+                        form.serialize(),
+                        function(response) {
+                            if(response.status == 'ok') {
+                                //asd
+                            } else {
+                                //asd
+                            }
+                        }
+                    ).error(function(){
+                        alert('Things failed');
+                    });
+                    $(this).hide();
                 });
             }
         );

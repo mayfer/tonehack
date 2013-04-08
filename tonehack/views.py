@@ -35,15 +35,20 @@ def about(request):
 
 def save(request):
     waves = request.POST['waves']
+    name = request.POST['name'].strip()
 
     instrument = Instrument(
+        name=name,
         waves_json=waves,
-        ip=request.META['REMOTE_ADDR'],
+        owner=request.META['REMOTE_ADDR'],
         date=datetime.utcnow(),
     )
 
     instrument.save()
+    url = 'test'
+
     response = {
         'status': 'ok',
+        'url': url,
     }
     return json_response(response)
