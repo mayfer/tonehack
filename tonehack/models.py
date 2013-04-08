@@ -5,6 +5,7 @@ class Instrument(models.Model):
     id = models.AutoField(primary_key=True)
     waves_json = models.TextField()
     date = models.DateTimeField()
+    owner = models.CharField(max_length=50)
 
     class Meta:
         db_table = 'messages'

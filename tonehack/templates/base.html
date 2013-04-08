@@ -33,6 +33,7 @@
                     {% with urlname=request.path|urlname %}
                     <a href='{% url index %}' {% if urlname = 'index'  %} class='selected' {% endif %}>Timbre builder</a>
                     <a href='{% url article %}' {% if urlname = 'article'  %} class='selected' {% endif %}>Further reading</a>
+                    <a href='{% url about %}' {% if urlname = 'about'  %} class='selected' {% endif %}>About</a>
                     {% endwith  %}
                 </div>
             </div>
@@ -45,10 +46,11 @@
                 <div class='column'>
                     made by <a href='http://muratayfer.com'>murat</a><br />
                     <span style='opacity: 0.8'>last updated april 2013</span><br />
-                    <a href=''>more info</a>
+                    <a href='{% url about %}'>more info</a>
                 </div>
             </div>
         </div>
+        {% block popups %}{% endblock %}
         <script type="text/javascript">
 
             var _gaq = _gaq || [];

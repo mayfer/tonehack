@@ -69,6 +69,7 @@ function waveCanvas(jq_elem, freqs) {
 
         var superposed_row = $('<div>').addClass('row superposed').appendTo(this.wave_rows);
         var superposed_controls = $('<div>').addClass('wave-controls').appendTo(superposed_row);
+        var action_buttons = $('<div>').addClass('action-buttons').appendTo(superposed_controls);
 
         var spacer = $('<div>').addClass('spacer').appendTo(superposed_row);
 
@@ -116,10 +117,26 @@ function waveCanvas(jq_elem, freqs) {
                 that.saveWaves();
             }
         });
-       var add_tone = $('<a>').addClass('add-tone setting')
+
+        var save_tone = $('<a>').addClass('save-tone setting')
             .attr('href', '#')
-            .html('Add a tone [+]')
-            .appendTo(superposed_controls)
+            .html('<span>¬</span> Share current instrument')
+            .appendTo(action_buttons)
+            .on('click', function(e){
+                e.preventDefault();
+                $('#save').show();
+                $('#save').find('input').focus();
+                $('#save .close').one('click', function(e){
+                    e.preventDefault();
+                    $('#save').hide();
+                });
+            }
+        );
+        $('<br>').appendTo(action_buttons)
+        var add_tone = $('<a>').addClass('add-tone setting')
+            .attr('href', '#')
+            .html('<span>+</span> Add a tone')
+            .appendTo(action_buttons)
             .on('click', function(e){
                 e.preventDefault();
                 var wave;
@@ -145,7 +162,8 @@ function waveCanvas(jq_elem, freqs) {
                 wave_row.find('.frequency').focus();
                 that.resetWavesCanvas();
                 that.saveWaves();
-            });
+            }
+        );
 
         this.wave_rows.bind('mouseup', function(e) {
             that.saveWaves();
@@ -226,7 +244,7 @@ function waveCanvas(jq_elem, freqs) {
         var string_canvas = new stringSubCanvas(this.waves_canvas, wave, base_freq, this.wave_height, this.spacer);
         string_canvas.setProgressElem(progress_elem);
 
-        $('<a>').html('reset').appendTo(controls).addClass('reset').on('click', function(e){
+        $('<a>').attr('href', '#').html('reset').appendTo(controls).addClass('reset').on('click', function(e){
             if(that.drawing_mode == 'volume') {
                 for(var i = 0; i < wave.volume_envelope.length; i++) {
                     wave.volume_envelope[i] = 0.5;
@@ -445,7 +463,7 @@ function waveCanvas(jq_elem, freqs) {
         controls.append(
             $('<a>').addClass('show-presets').html("<span>▼</span> Presets").attr('href', '#').on('click', function(e){
                 e.preventDefault();
-                $('#presets').css('top', $(this).position().top + $(this).height() + 'px');
+                $('#presets').css('top', $(this).offset().top + $(this).height() + 'px');
                 $('#presets').toggle();
             })
         );

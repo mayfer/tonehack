@@ -38,7 +38,7 @@ canvas { display: block; }
 
 .container { width: 1000px; margin: 0 auto; position: relative; }
             
-a { color: #a50; text-decoration: none; border-bottom: 1px solid #ff8000; }
+a { color: #a50; text-decoration: none; }
 a:hover { color: #b20; }
 #footer a:hover { color: #c90; }
             
@@ -61,11 +61,14 @@ a:hover { color: #b20; }
 
 .adsr-link canvas { position: absolute; top: 0; left: 0; }
             
+.action-buttons { position: absolute; top: 5px; left: 10px; }
 .setting { font-size: 12px; line-height: 16px; padding: 0 3px; }
-.add-tone { position: absolute; top: 10px; left: 10px; background: #ddd; border-radius: 2px; }
-.add-tone:hover { background: #fff; }
+.action-buttons a { background: #ddd; border-radius: 2px; }
+.action-buttons a:hover { background: #fff; }
+.action-buttons a span { display: inline-block; line-height: 10px; width: 10px; background: #fff; border-radius: 5px; color: #777; text-align: center; }
+
 .all-durations { position: absolute; bottom: 10px; left: 10px; }
-.envelope-switcher { position: absolute; bottom: 10px; left: 400px; }
+.envelope-switcher { position: absolute; bottom: 10px; left: 350px; }
 .envelope-switcher a { color: #555; border-bottom: 1px solid #555; border-radius: 1px; background: #ddd; padding: 0 5px; line-height: 16px; }
 .envelope-switcher a:hover { background: #fff; }
 .envelope-switcher a.volume.selected { color: #a50; background: #eee; border: 2px solid #a50; border-right: 1px solid #555; }
@@ -82,22 +85,32 @@ a:hover { color: #b20; }
 .drawing-canvas { position: absolute; top: 0; left: 0; opacity: 0.3; }
 .drawing-canvas.active { z-index: 100; opacity: 1; }
 
-.draw-mode { z-index: 200; position: absolute; top: 30px; left: 50%; width: 300px; margin-left: -150px; border-radius: 5px; line-height: 30px; text-align: center; }
-.draw-mode a { background: #fff; color: #aaa; display: inline-block; width: 150px; border-radius: 5px; border-bottom: 2px solid #aaa; }
-.draw-mode a.volume.selected, .draw-mode a.volume:hover { color: #aa6000; border-bottom: 2px solid #aa6000; }
-.draw-mode a.freq.selected, .draw-mode a.freq:hover { color: #00aa00; border-bottom: 2px solid #00aa00; }
-
 #header h1, #header h2 { padding: 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FF8000, 0 0 70px #FF8000, 0 0 80px #FF8000, 0 0 100px #FF8000, 0 0 150px #FF8000; color: #fff; }
 #header h1 { margin: 30px 0 5px 0; font-size: 25px; line-height: 28px; text-align: right; }
 #header h2 { font-size: 16px; line-height: 20px; margin: 0; text-align: right; }
 #header h2 span.lt { font-size: 25px; }
 
-#help { display: none; position: absolute; top: 90px; left: 50%; margin-left: -300px; width: 550px; padding: 20px; background: #ddd; z-index: 500; border-radius: 10px; box-shadow: 0 0 20px 0 #000; border: 5px solid #666; color: #000; padding-top: 60px; }
-#help .title { position: absolute; top: 0; left: 0; width: 100%; background: #999; border-top-right-radius: 5px; border-top-left-radius: 5px; }
-#help .title h3 { margin: 0 10px; line-height: 30px; color: #fff; padding: 10px; }
-#help .close { position: absolute; top: 0; right: 0; line-height: 8px; width: 8px; height: 8px; display: block; padding: 10px; background: #bbb; border: none; border-radius: 5px; color: #333; }
+.popup { display: none; position: absolute; top: 90px; left: 50%; margin-left: -300px; width: 550px; padding: 20px; background: #ddd; z-index: 500; border-radius: 10px; box-shadow: 0 0 20px 0 #000; border: 5px solid #666; color: #000; padding-top: 60px; }
+.popup .title { position: absolute; top: 0; left: 0; width: 100%; background: #999; border-top-right-radius: 5px; border-top-left-radius: 5px; }
+.popup .title h3 { margin: 0 10px; line-height: 30px; color: #fff; padding: 10px; }
+.popup .close { position: absolute; top: 0; right: 0; line-height: 8px; width: 8px; height: 8px; display: block; padding: 10px; background: #bbb; border: none; border-radius: 5px; color: #333; }
+
+#help, #save { top: 200px; }
+
+#save p { font-size: 13px; }
+#save button , #save input { display: inline-block; line-height: 20px; margin: 0; }
+#save input { background: #fff; border: 1px solid #555; }
+#save button { background: #333; color: #aaa; border: 1px solid #555; }
 
 #fec { padding: 20px; background: #333; border: 1px solid #444; border-top: 1px solid #000; border-left: 1px solid #222; border-radius: 3px; margin: 10px 0; color: #ccc; font-size: 13px; }
 #fec li { margin-bottom: 10px; }
 #fec strong { color: #ddd; }
 #fec li span { color: #aaa; font-size: 10px; }
+
+#about .inner { margin: 50px 150px; padding: 25px; background: #333; text-align: center; font-size: 13px; color: #ccc; }
+#about a { border-bottom: 1px solid #666; }
+#about table { text-align: left; margin: 0 auto; }
+#about table th { text-align: right; padding-right: 10px; }
+.hr { border-top: 1px solid #111; border-bottom: 1px solid #444; margin: 10px; }
+
+input, button { font-family: monospace; margin: 0; padding: 0 5px; }

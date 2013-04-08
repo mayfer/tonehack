@@ -63,8 +63,6 @@
             <div id='piano'> </div>
             <div id='tonehack'>
                 <div id='overtones' class='wave-canvas'> </div>
-                <div id='presets'>
-                </div>
             </div>
             
             <div id='fec'>
@@ -72,7 +70,7 @@
                 <ul>
                     <li>
                         Brown line is the Volume Envelope.<br />
-                        <span>It's similar to an ADSR envelope, except you draw the whole thing by hand instead of using numeric values.</span>
+                        <span>It's similar to an <a href='http://en.wikipedia.org/wiki/Synthesizer#ADSR_envelope'>ADSR envelope</a>, except you draw the whole thing by hand instead of using numeric values.</span>
                     </li>
                     <li>
                         Green line is the Pitch bend (frequency shifting).
@@ -89,12 +87,30 @@
                     </li>
                 </ul>
             </div>
-            <div id='help'>
-                <div class='title'>
-                    <h3>Quick Help</h3>
-                    <a href='#' class='close'>&times;</a>
-                </div>
-                <p>Timbre, the texture of sound, the thing that makes you distinguish between a guitar and a saxaphone, is differences in overtonic content of the sounds they produce.</p>
-                <p>This means that a single note you hear has several frequencies playing at once. Tonehack lets you pick these frequencies yourself, and using your cursor, draw how these frequencies change over time.</p>
+{% endblock %}
+{% block popups %}
+        <div id='help' class='popup'>
+            <div class='title'>
+                <h3>Quick Help</h3>
+                <a href='#' class='close'>&times;</a>
             </div>
+            <p><strong>Timbre</strong>, (the texture of sound; the thing that makes you distinguish between a guitar and a saxaphone) is our perception of the particular overtonic content of a sound.</p>
+            <p>This means that a single note you hear has several frequencies playing at once. The loudest frequency is referred to as the note you hear. For example, 110Hz is an A. The other, quieter multiples of the root are its overtones. 220Hz, 330Hz, etc. would be overtones of A.</p>
+            <p>Tonehack lets you pick these frequencies yourself, and using your cursor, draw how these frequencies change over time.</p>
+            <p>Look through some presets to get an idea of how to create your own timbres.</p>
+        </div>
+        <div id='save' class=popup>
+            <div class='title'>
+                <h3>Save and Share instrument</h3>
+                <a href='#' class='close'>&times;</a>
+            </div>
+            <p>
+                First, pick a name:
+            </p>
+            <p>
+                <input type='text' placeholder='anything will do' value='{{ name_examples|random }}' /><button>Pick</button>
+            </p>
+        </div>
+        <div id='presets'>
+        </div>
 {% endblock %}

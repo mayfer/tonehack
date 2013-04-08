@@ -8,4 +8,5 @@ urlpatterns = patterns('tonehack.views',
 
     url(r'^save/?$', 'save', name='save'),
     url(r'^article/?$', 'article', name='article'),
+    url(r'^about/?$', 'about', name='about'),
 )
