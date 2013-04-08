@@ -92,4 +92,12 @@ a:hover { color: #b20; }
 #header h2 { font-size: 16px; line-height: 20px; margin: 0; text-align: right; }
 #header h2 span.lt { font-size: 25px; }
 
-#help { display: none; position: absolute; top: 90px; left: 50%; margin-left: -300px; width: 550px; padding: 20px; background: #ddd; z-index: 500; border-radius: 10px; box-shadow: 0 0 20px 0 #000; border: 5px solid #666; color: #000; }
+#help { display: none; position: absolute; top: 90px; left: 50%; margin-left: -300px; width: 550px; padding: 20px; background: #ddd; z-index: 500; border-radius: 10px; box-shadow: 0 0 20px 0 #000; border: 5px solid #666; color: #000; padding-top: 60px; }
+#help .title { position: absolute; top: 0; left: 0; width: 100%; background: #999; border-top-right-radius: 5px; border-top-left-radius: 5px; }
+#help .title h3 { margin: 0 10px; line-height: 30px; color: #fff; padding: 10px; }
+#help .close { position: absolute; top: 0; right: 0; line-height: 8px; width: 8px; height: 8px; display: block; padding: 10px; background: #bbb; border: none; border-radius: 5px; color: #333; }
+
+#fec { padding: 20px; background: #333; border: 1px solid #444; border-top: 1px solid #000; border-left: 1px solid #222; border-radius: 3px; margin: 10px 0; color: #ccc; font-size: 13px; }
+#fec li { margin-bottom: 10px; }
+#fec strong { color: #ddd; }
+#fec li span { color: #aaa; font-size: 10px; }

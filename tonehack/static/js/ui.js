@@ -453,6 +453,10 @@ function waveCanvas(jq_elem, freqs) {
             $('<a>').addClass('quick-help').html("<span>?</span> Quick Help").attr('href', '#').on('click', function(e){
                 e.preventDefault();
                 $('#help').show();
+                $('#help .close').one('click', function(e){
+                    e.preventDefault();
+                    $('#help').hide();
+                });
             })
         );
         

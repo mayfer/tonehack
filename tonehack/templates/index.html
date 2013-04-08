@@ -67,16 +67,34 @@
                 </div>
             </div>
             
-            <div id='article'>
-                <p>
-                    <strong>F.E.C. (Frequently Encountered Confusions):</strong>
-                    <ul>
-                        <li>Brown line is the Volume Envelope</li>
-                        <li>Green line is the Pitch bend (frequency shifting)</li>
-                    </ul>
-                </p>
+            <div id='fec'>
+                <strong>F.E.C. (Frequently Encountered Confusions):</strong>
+                <ul>
+                    <li>
+                        Brown line is the Volume Envelope.<br />
+                        <span>It's similar to an ADSR envelope, except you draw the whole thing by hand instead of using numeric values.</span>
+                    </li>
+                    <li>
+                        Green line is the Pitch bend (frequency shifting).
+                        <br />
+                        <span>Center of the drawing area is the frequency you pick. Top and bottom edges are the octave above and octave below that, respectively.</span>
+                    </li>
+                    <li>
+                        The string animations are for visualization only.<br />
+                        <span>They serve no function. Except visualization.</span>
+                    </li>
+                    <li>
+                        The letters on the piano keys mean you can type to play notes.<br />
+                        <span>You can click the grey boxes below the piano keys to move the keyboard bindings around.</span>
+                    </li>
+                </ul>
             </div>
             <div id='help'>
-                <h2>A small guide</h2>
+                <div class='title'>
+                    <h3>Quick Help</h3>
+                    <a href='#' class='close'>&times;</a>
+                </div>
+                <p>Timbre, the texture of sound, the thing that makes you distinguish between a guitar and a saxaphone, is differences in overtonic content of the sounds they produce.</p>
+                <p>This means that a single note you hear has several frequencies playing at once. Tonehack lets you pick these frequencies yourself, and using your cursor, draw how these frequencies change over time.</p>
             </div>
 {% endblock %}

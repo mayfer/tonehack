@@ -141,7 +141,6 @@ function superposedStringCanvas(waves_canvas, strings, wave_height) {
     this.wave_halfheight = this.wave_height / 2;
     this.center = this.wave_halfheight;
     this.num_steps = Math.floor(this.context.width / X_INCREMENT);
-    this.divide = strings.length / 3;
     
     this.draw = function(time_diff) {
         this.context.fillRect(0, 0, this.context.width, this.context.height);
@@ -156,7 +155,7 @@ function superposedStringCanvas(waves_canvas, strings, wave_height) {
                 coords.y += current_coords[i].y;
             }
 
-            coords.y = coords.y / this.divide;
+            coords.y = coords.y / this.strings.length;
             coords.y = Math.min(coords.y, this.wave_halfheight);
             coords.y = Math.max(coords.y, -this.wave_halfheight);
             this.context.lineTo(coords.x, coords.y + this.center);
