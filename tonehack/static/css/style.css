@@ -10,7 +10,7 @@ canvas { display: block; }
 .row .wave-controls .wave-controls-inner { padding: 15px 10px; }
 .row.superposed .wave-controls { width: 80%; }
 
-.row .envelopes { float: left; cursor: crosshair; display: block; position: relative; height: 80px; background: #fff; width: 60%; }
+.row .envelopes { float: left; cursor: crosshair; display: block; position: relative; height: 80px; background: #eee; width: 60%; }
 .row .envelopes .progress {  position: absolute; top: 0; left: 0; }
 .row .spacer { margin: 0 -1px; height: 5px; background: #aaa; border-top: 1px solid #555; border-bottom: 1px solid #ddd; clear: both; }
 .row .spacer.last { border-bottom: none; }
@@ -113,5 +113,6 @@ a:hover { color: #b20; }
 #about table { text-align: left; margin: 0 auto; }
 #about table th { text-align: right; padding-right: 10px; }
 .hr { border-top: 1px solid #111; border-bottom: 1px solid #444; margin: 10px; }
+.popup .hr { border-top: 1px solid #888; border-bottom: 1px solid #fff; margin: 10px; }
 
 input, button { font-family: monospace; margin: 0; padding: 0 5px; }

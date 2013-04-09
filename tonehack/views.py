@@ -2,16 +2,19 @@ from shortcuts import template_response, json_response, html_response, not_found
 from django.db.models import Q
 from tonehack.models import Instrument
 from datetime import datetime
+from django.core.urlresolvers import reverse
+import re
 
 def index(request):
-    instruments = Instrument.objects.filter()
+    presets = Instrument.objects.filter(owner='murat')
     response = {
-        'instruments': instruments,
+        'presets': presets,
+        'default_instrument': Instrument.objects.get(urlid='default'),
         'name_examples': [
             'Indigo',
             'Paleo party',
             'Zoog',
-            'Ear patch',
+            'Earpatch',
             'Antimpani',
             'Modem',
             'Kinder surprise',
@@ -21,9 +24,20 @@ def index(request):
             'Shallow',
             'Deep',
             'Turtle walk',
+            'String box',
+            'Wind pipe',
+            'Zoomer',
+            'Boomer',
+            'Cricketmaster 2000',
+            'Koo',
+            'Bow bow',
+            'Bleak',
         ],
     }
     return template_response('index.html', response, request)
+
+def instrument(request):
+    instrument = Instrument.objects.get(urlid=urlid)
 
 def article(request):
     response = {}
@@ -34,11 +48,26 @@ def about(request):
     return template_response('about.html', response, request)
 
 def save(request):
-    waves = request.POST['waves']
+    if 'waves_json' not in request.POST or 'name' not in request.POST:
+        response = {
+            'status': 'failed',
+            'message': 'waves_json and name arguments must be provied.',
+        }
+        return json_response(response)
+
+    waves = request.POST['waves_json']
     name = request.POST['name'].strip()
+    orig_urlid = re.sub(r'\W+', '-', name)
+    urlid = orig_urlid
+
+    i = 1
+    while Instrument.objects.filter(urlid=urlid).exists():
+        urlid = orig_urlid + "-{i}".format(i=i)
+        i += 1
 
     instrument = Instrument(
         name=name,
+        urlid=urlid,
         waves_json=waves,
         owner=request.META['REMOTE_ADDR'],
         date=datetime.utcnow(),
@@ -49,6 +78,6 @@ def save(request):
 
     response = {
         'status': 'ok',
-        'url': url,
+        'url': request.build_absolute_uri(reverse('instrument', kwargs={'urlid': urlid})),
     }
     return json_response(response)

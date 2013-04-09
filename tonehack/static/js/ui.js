@@ -126,29 +126,34 @@ function waveCanvas(jq_elem, freqs) {
                 e.preventDefault();
                 var orig_html = $('#save').html();
                 $('#save').show();
-                $('#save').find('input').focus();
+                $('#save').find('input').focus().on('keypress', function(e){ e.stopPropagation(); });
                 $('#save .close').one('click', function(e){
                     e.preventDefault();
                     $('#save').hide();
                     $('#save').html(orig_html);
                 });
+                that.saveWaves();
                 $('#save form').on('submit', function(e){
                     e.preventDefault();
                     var form = $(this);
-                    $.postJSON(
+                    var data = {
+                        waves_json: window.localStorage['waves'],
+                        name: form.find('input[name="name"]').val(),
+                    };
+                    form.html('Saving instrument...');
+                    $.post(
                         form.data('url'),
-                        form.serialize(),
+                        data,
                         function(response) {
                             if(response.status == 'ok') {
-                                //asd
+                                form.html("<p>Your instrument is available at:</p><p><a href='"+response.url+"'>"+response.url+"</a></p>");
                             } else {
                                 //asd
                             }
-                        }
+                        }, 'json'
                     ).error(function(){
                         alert('Things failed');
                     });
-                    $(this).hide();
                 });
             }
         );
@@ -265,6 +270,7 @@ function waveCanvas(jq_elem, freqs) {
         string_canvas.setProgressElem(progress_elem);
 
         $('<a>').attr('href', '#').html('reset').appendTo(controls).addClass('reset').on('click', function(e){
+            e.preventDefault();
             if(that.drawing_mode == 'volume') {
                 for(var i = 0; i < wave.volume_envelope.length; i++) {
                     wave.volume_envelope[i] = 0.5;

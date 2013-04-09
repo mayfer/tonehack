@@ -3,7 +3,7 @@
         <!-- default waves to load -->
         <script type='text/javascript'>
             presets = {};
-            presets['Pure tone'] = [{'freq': 220, 'duration': 1000, 'audio_amplitude': 1,}];
+            default_tone = {{ default_instrument.waves_json|safe }};
         </script>
         <script type='text/javascript' src='{{ STATIC_URL }}js/presets/guitar.js'></script>
         <script type='text/javascript'>
@@ -13,7 +13,7 @@
                 if(window.localStorage['waves']) {
                     overtones = JSON.parse(window.localStorage['waves']);
                 } else {
-                    overtones = presets['Pure tone'];
+                    overtones = default_tone;
                 }
                 canvas_overtones = new waveCanvas($('#overtones'), overtones).init();
 
@@ -94,6 +94,11 @@
                 <h3>Quick Help</h3>
                 <a href='#' class='close'>&times;</a>
             </div>
+            <ul>
+                <li>The line drawings define how your tones go.</li>
+                <li>The piano above lets you play your sound as an instrument.</li>
+            </ul>
+            <div class='hr'></div>
             <p><strong>Timbre</strong>, (the texture of sound; the thing that makes you distinguish between a guitar and a saxaphone) is our perception of the particular overtonic content of a sound.</p>
             <p>This means that a single note you hear has several frequencies playing at once. The loudest frequency is referred to as the note you hear. For example, 110Hz is an A. The other, quieter multiples of the root are its overtones. 220Hz, 330Hz, etc. would be overtones of A.</p>
             <p>Tonehack lets you pick these frequencies yourself, and using your cursor, draw how these frequencies change over time.</p>
@@ -104,12 +109,12 @@
                 <h3>Save and Share instrument</h3>
                 <a href='#' class='close'>&times;</a>
             </div>
-            <form>
+            <form data-url='{% url save %}'>
                 <p>
                 First, pick a name:
                 </p>
                 <p>
-                <input type='text' placeholder='anything will do' value='{{ name_examples|random }}' /><button>Pick</button>
+                <input type='text' name='name' placeholder='anything will do' value='{{ name_examples|random }}' /><button>Pick</button>
                 </p>
             </form>
         </div>
