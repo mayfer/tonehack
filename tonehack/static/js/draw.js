@@ -1,4 +1,4 @@
-X_INCREMENT = 5;
+X_INCREMENT = 1;
 
 function setCanvasSize(canvas_jq, width, height) {
     canvas_jq.css('width', width);
@@ -79,7 +79,7 @@ function stringSubCanvas(waves_canvas, wave, base_freq, wave_height, spacer) {
         var x = 0;
         var y = 0;
         var points = [];
-        while(x < this.context.width) {
+        while(x <= this.context.width) {
             x += X_INCREMENT;
             y = this.wave.sin(x, current_relative_freq, current_amplitude);
             var point = {
