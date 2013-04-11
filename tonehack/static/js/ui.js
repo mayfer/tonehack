@@ -120,7 +120,7 @@ function waveCanvas(jq_elem, freqs) {
 
         var save_tone = $('<a>').addClass('save-tone setting')
             .attr('href', '#')
-            .html('<span>¬</span> Share current instrument')
+            .html('<span>¬</span> Save/Share current instrument')
             .appendTo(action_buttons)
             .on('click', function(e){
                 e.preventDefault();
