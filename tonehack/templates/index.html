@@ -17,25 +17,6 @@
                 }
                 canvas_overtones = new waveCanvas($('#overtones'), overtones).init();
 
-                // load the other presets asynchronously
-                var preset_paths = [
-                    "{{ STATIC_URL }}js/presets/violin.js",
-                    "{{ STATIC_URL }}js/presets/clarinet.js",
-                    "{{ STATIC_URL }}js/presets/drum.js",
-                    "{{ STATIC_URL }}js/presets/rhythmic_synth.js",
-                ];
-                require(preset_paths, function() {
-                    var presets_div = $('#presets');
-                    $.each(presets, function(key, preset){
-                        $('<a>').attr('href', '#').addClass('preset').html(key).appendTo(presets_div).on('click', function(e){
-                            e.preventDefault();
-                            canvas_overtones.stop();
-                            canvas_overtones.loadPreset(preset);
-                            $('#presets').hide();
-                        });
-                    });
-                });
-
                 $('#piano').piano({
                     number_of_keys: 55,
                     keyboard_play: true,
@@ -119,5 +100,8 @@
             </form>
         </div>
         <div id='presets'>
+            {% for preset in presets %}
+                <a class='preset' href='{% url instrument preset.urlid %}'>{{ preset.name }}</a>
+            {% endfor %}
         </div>
 {% endblock %}
