@@ -485,7 +485,7 @@ function waveCanvas(jq_elem, freqs) {
     this.initControls = function(){
         var that = this;
         var controls = $('<div>').addClass('controls');
-        $('<a>').addClass('start icon-play').attr('href', '#').appendTo(controls);
+        $('<a>').addClass('preview start icon-play').attr('href', '#').appendTo(controls);
         controls.append(
             $('<a>').addClass('show-presets').html("<span>▼</span> Presets").attr('href', '#').on('click', function(e){
                 e.preventDefault();
