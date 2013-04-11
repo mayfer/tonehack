@@ -36,8 +36,14 @@ def index(request):
     }
     return template_response('index.html', response, request)
 
-def instrument(request):
-    instrument = Instrument.objects.get(urlid=urlid)
+def instrument(request, urlid):
+    try:
+        response = {
+            'instrument': Instrument.objects.get(urlid=urlid)
+        }
+        return template_response('load.html', response, request)
+    except:
+        return not_found()
 
 def article(request):
     response = {}

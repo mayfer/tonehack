@@ -9,5 +9,5 @@ urlpatterns = patterns('tonehack.views',
     url(r'^save/?$', 'save', name='save'),
     url(r'^article/?$', 'article', name='article'),
     url(r'^about/?$', 'about', name='about'),
-    url(r'^i/(?P<urlid>[a-zA-Z0-9_-]+)/?$', 'index', name='instrument'),
+    url(r'^i/(?P<urlid>[a-zA-Z0-9_-]+)/?$', 'instrument', name='instrument'),
 )

@@ -1,0 +1,10 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- default waves to load -->
+        <script type='text/javascript'>
+            window.localStorage['waves'] = '{{ instrument.waves_json|safe }}';
+            window.location = '{% url index %}';
+        </script>
+    </head>
+</html>
