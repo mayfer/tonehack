@@ -6,7 +6,8 @@ from django.core.urlresolvers import reverse
 import re
 
 def index(request):
-    presets = Instrument.objects.filter(owner='murat')
+    # presets = Instrument.objects.filter(owner='murat')
+    presets = Instrument.objects.all()
     response = {
         'presets': presets,
         'default_instrument': Instrument.objects.get(urlid='default'),
