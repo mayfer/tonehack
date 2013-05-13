@@ -65,13 +65,15 @@ function stringSubCanvas(waves_canvas, wave, base_freq, wave_height, spacer) {
     };
 
     this.getPlotCoordinates = function(time_diff) {
-        this.relative_freq = this.standing * wave.freq / base_freq;
+        this.relative_freq = this.standing * this.wave.freq / base_freq;
+        this.speed_adjustment = this.wave.freq / base_freq / 50;
+        
         if(this.last_plot === time_diff) {
             // no need to recalculate
             return this.current_plot_coordinates;
         }
         
-        this.step = (this.speed / (base_freq * 2)) * time_diff * (Math.PI/2) % Math.PI*2;
+        this.step = this.speed * time_diff * (Math.PI/20) * this.speed_adjustment % Math.PI*2;
         var volume_envelope_amplitude = this.wave.currentEnvelopeValue(time_diff / this.wave.duration);
         var current_relative_freq = Notes.relative_note(this.relative_freq, this.wave.currentPitchBend(time_diff / this.wave.duration));
         
