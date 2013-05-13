@@ -123,4 +123,4 @@ a:hover { color: #b20; }
 
 input, button { font-family: monospace; margin: 0; padding: 0 5px; }
 
-#browse .preset { display: inline-block; padding: 5px 10px; background: rgba(255,255,255,0.8); border-radius: 2px; float: left; white-space:nowrap; margin-right: 5px; }
+#browse .preset { display: inline-block; padding: 5px 10px; background: rgba(255,255,255,0.8); border-radius: 2px; float: left; white-space:nowrap; margin: 0 5px 5px 0; }
