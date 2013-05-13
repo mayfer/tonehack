@@ -38,10 +38,12 @@
                 </div>
             </div>
         </div>
-        <div class='container'>
-        {% block content %}{% endblock %}
+        <div id='main'>
+            <div class='container'>
+            {% block content %}{% endblock %}
+            </div>
+            {% block fullwidth_content %}{% endblock %}
         </div>
-        {% block fullwidth_content %}{% endblock %}
         <div id='footer'>
             <div class='container'>
                 <div class='column'>
