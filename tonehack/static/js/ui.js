@@ -25,7 +25,7 @@ function waveCanvas(jq_elem, freqs) {
 
         if (! window.AudioContext) {
             if (! window.webkitAudioContext) {
-                alert('Dude, your browser is totally not supported. Upgrade already.');
+                alert('Sorry, Webkit only. I may have to kindly ask you to switch to Chrome for now.');
                 return;
             }
             window.AudioContext = window.webkitAudioContext;
