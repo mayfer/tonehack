@@ -103,5 +103,6 @@
             {% for preset in presets %}
                 <a class='preset' href='{% url instrument preset.urlid %}'>{{ preset.name }}</a>
             {% endfor %}
+            <a class='view-all' href='{% url browse %}'>View all &raquo;</a>
         </div>
 {% endblock %}

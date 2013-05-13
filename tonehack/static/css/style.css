@@ -36,6 +36,8 @@ canvas { display: block; }
 #presets { display: none; width: 175px; position: absolute; top: 0; left: 50%; width: 300px; margin-left: -150px; z-index: 500; background: #777; padding: 10px; border-radius: 2px; }
 #presets h3 { margin: 0; line-height: 26px; }
 #presets .preset { display: block; padding: 10px; background: #eee; border-top: 1px solid #fff; border-bottom: 1px solid #aaa; border-left: 1px solid #fff; border-right: 1px solid #aaa; border-radius: 2px; }
+#presets .view-all { display: block; padding: 10px; color: #eee; }
+#presets .view-all:hover { color: #fff; text-decoration: underline; }
 
 .container { width: 1000px; margin: 0 auto; }
 .container-medium { width: 800px; margin: 0 auto; }
