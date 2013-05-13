@@ -120,3 +120,5 @@ a:hover { color: #b20; }
 .popup .hr { border-top: 1px solid #888; border-bottom: 1px solid #fff; margin: 10px; }
 
 input, button { font-family: monospace; margin: 0; padding: 0 5px; }
+
+#browse .preset { display: inline-block; padding: 5px 10px; background: rgba(255,255,255,0.8); border-radius: 2px; float: left; white-space:nowrap; margin-right: 5px; }

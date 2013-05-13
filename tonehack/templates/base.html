@@ -33,6 +33,7 @@
                     {% with urlname=request.path|urlname %}
                     <a href='{% url index %}' {% if urlname = 'index'  %} class='selected' {% endif %}>Timbre builder</a>
                     <a href='{% url article %}' {% if urlname = 'article'  %} class='selected' {% endif %}>Further reading</a>
+                    <a href='{% url browse %}' {% if urlname = 'browse'  %} class='selected' {% endif %}>Browse instruments</a>
                     <a href='{% url about %}' {% if urlname = 'about'  %} class='selected' {% endif %}>About</a>
                     {% endwith  %}
                 </div>
