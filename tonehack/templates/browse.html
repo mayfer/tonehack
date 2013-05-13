@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block head %}
+{% endblock %}
+{% block content %}
+    <div id='browse'>
+        <p>All instruments shared or saved by others:</p>
+        {% for preset in presets %}
+            <a class='preset' href='{% url instrument preset.urlid %}'>{{ preset.name }}</a>
+        {% endfor %}
+        <div class='clear'></div>
+    </div>
+{% endblock %}
