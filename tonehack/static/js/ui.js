@@ -19,7 +19,7 @@ function waveCanvas(jq_elem, freqs) {
         default_options = {
             details: true,
             scale: 1,
-            
+            wave_height: 40,
         }
         this.options = $.extend({}, default_options, options_input); 
 
@@ -40,17 +40,20 @@ function waveCanvas(jq_elem, freqs) {
         this.setup();
 
         var that = this;
-        $(document).keypress(function(e) {
-            var k = e ? e.which : window.event.keyCode;
-            if (k == 32) {
-            e.preventDefault();
-                if(that.state == 'running') {
-                    that.stop();
-                } else {
-                    that.start();
+
+        if(this.options.details) {
+            $(document).keypress(function(e) {
+                var k = e ? e.which : window.event.keyCode;
+                if (k == 32) {
+                e.preventDefault();
+                    if(that.state == 'running') {
+                        that.stop();
+                    } else {
+                        that.start();
+                    }
                 }
-            }
-        });
+            });
+        }
 
         return this;
     };
@@ -64,11 +67,20 @@ function waveCanvas(jq_elem, freqs) {
         var that = this;
         
         this.waves_canvas_parent = $('<div>').addClass('waves').appendTo(this.wave_rows);
+
+        if(!this.options.details) {
+            this.waves_canvas_parent.addClass('full');
+        }
+
         this.waves_canvas = new Canvas(this.waves_canvas_parent);
         this.context = this.waves_canvas.get(0).getContext("2d");
 
-        var superposed_row = $('<div>').addClass('row superposed').appendTo(this.wave_rows);
-        var superposed_controls = $('<div>').addClass('wave-controls').appendTo(superposed_row);
+        if(this.options.details) {
+            var superposed_row = $('<div>').addClass('row superposed').appendTo(this.wave_rows);
+            var superposed_controls = $('<div>').addClass('wave-controls');
+            superposed_controls.appendTo(superposed_row);
+        }
+        
         var action_buttons = $('<div>').addClass('action-buttons').appendTo(superposed_controls);
 
         var spacer = $('<div>').addClass('spacer').appendTo(superposed_row);
@@ -101,10 +113,14 @@ function waveCanvas(jq_elem, freqs) {
         }
         this.saveWaves();
 
-        this.superposed_canvas = superposedStringCanvas(this.waves_canvas, this.wave_canvases, superposed_row.height()-spacer.height());
+        if(this.options.details) {
+            this.superposed_canvas = superposedStringCanvas(this.waves_canvas, this.wave_canvases, superposed_row.height()-spacer.height());
+        }
         this.resetWavesCanvas();
 
-        var resulting_wave_label = $('<div>').addClass('wave-label resulting-wave').html('Resulting wave').appendTo(this.wave_rows).css({top: '5px', right: '5px'});
+        if(this.options.details) {
+            var resulting_wave_label = $('<div>').addClass('wave-label resulting-wave').html('Resulting wave').appendTo(this.wave_rows).css({top: '5px', right: '5px'});
+        }
         
         var all_durations = $('<label>').addClass('all-durations setting').html('Set all tone durations to: <input class="durations" type="text" />ms').appendTo(superposed_controls).find('input').keypress(function(e) {
             if(e.which == 13) {
@@ -202,7 +218,12 @@ function waveCanvas(jq_elem, freqs) {
     }
 
     this.addWave = function(wave) {
-        var row = $('<div>').addClass('row').appendTo(this.wave_rows);
+        var row = $('<div>').addClass('row')
+
+        if(this.options.details) {
+            row.appendTo(this.wave_rows);
+        }
+
         var controls_container = $('<div>').addClass('wave-controls').appendTo(row);
         var controls = $('<div>').addClass('wave-controls-inner').appendTo(controls_container);
         var envelopes = $('<div>').addClass('envelopes').appendTo(row);
@@ -263,8 +284,13 @@ function waveCanvas(jq_elem, freqs) {
         var progress_elem = new Canvas(envelopes).addClass('progress');
 
         var base_freq = 110;
-        this.wave_height = envelopes.outerHeight();
-        this.spacer = spacer_elem.outerHeight(true);
+        if(this.options.details) { 
+            this.wave_height = envelopes.outerHeight();
+            this.spacer = spacer_elem.outerHeight(true);
+        } else {
+            this.wave_height = this.options.wave_height;
+            this.spacer = 10;
+        }
 
         var string_canvas = new stringSubCanvas(this.waves_canvas, wave, base_freq, this.wave_height, this.spacer);
         string_canvas.setProgressElem(progress_elem);
@@ -313,7 +339,11 @@ function waveCanvas(jq_elem, freqs) {
     }
 
     this.resetWavesCanvas = function() {
-        var height = (this.wave_canvases.length + 1) * (this.wave_height + this.spacer) - this.spacer;
+        if(this.options.details) {
+            var height = (this.wave_canvases.length + 1) * (this.wave_height + this.spacer) - this.spacer;
+        } else {
+            var height = this.wave_canvases.length * (this.wave_height + this.spacer) - this.spacer;
+        }
         var width = this.waves_canvas.innerWidth();
         setCanvasSize(this.waves_canvas, width, height);
 
@@ -365,10 +395,18 @@ function waveCanvas(jq_elem, freqs) {
     this.drawFrame = function() {
         this.context.fillRect(0, 0, this.context.width, this.context.height);
         for(i = 0; i < this.wave_canvases.length; i++) {
-            this.wave_canvases[i].draw(this.time_diff, i+1);
+            var index;
+            if(this.options.details) {
+                index = i+1;
+            } else {
+                index = i;
+            }
+            this.wave_canvases[i].draw(this.time_diff, index);
             this.wave_canvases[i].markProgress(this.time_diff);
         }
-        this.superposed_canvas.draw(this.time_diff);
+        if(this.options.details) {
+            this.superposed_canvas.draw(this.time_diff);
+        }
         this.time_diff = new Date().getTime() - this.start_time;
     }
 
@@ -486,23 +524,26 @@ function waveCanvas(jq_elem, freqs) {
         var that = this;
         var controls = $('<div>').addClass('controls');
         $('<a>').addClass('preview start icon-play').attr('href', '#').appendTo(controls);
-        controls.append(
-            $('<a>').addClass('show-presets').html("<span>▼</span> Presets").attr('href', '#').on('click', function(e){
-                e.preventDefault();
-                $('#presets').css('top', $(this).offset().top + $(this).height() + 'px');
-                $('#presets').toggle();
-            })
-        );
-        controls.append(
-            $('<a>').addClass('quick-help').html("<span>?</span> Quick Help").attr('href', '#').on('click', function(e){
-                e.preventDefault();
-                $('#help').show();
-                $('#help .close').one('click', function(e){
+
+        if(this.options.details) {
+            controls.append(
+                $('<a>').addClass('show-presets').html("<span>▼</span> Presets").attr('href', '#').on('click', function(e){
                     e.preventDefault();
-                    $('#help').hide();
-                });
-            })
-        );
+                    $('#presets').css('top', $(this).offset().top + $(this).height() + 'px');
+                    $('#presets').toggle();
+                })
+            );
+            controls.append(
+                $('<a>').addClass('quick-help').html("<span>?</span> Quick Help").attr('href', '#').on('click', function(e){
+                    e.preventDefault();
+                    $('#help').show();
+                    $('#help .close').one('click', function(e){
+                        e.preventDefault();
+                        $('#help').hide();
+                    });
+                })
+            );
+        }
         
         controls.prependTo(jq_elem);
 
@@ -540,7 +581,11 @@ function waveCanvas(jq_elem, freqs) {
         var notewave = new soundWave(this.audio_context, adjusted_waves);
         notewave.play();
         return notewave;
-    }
+    };
+
+    this.setLabel = function(label) {
+        this.jq_elem.append($('<div>').addClass('label').html(label));
+    };
 }
         
 $(document).ready(function(){

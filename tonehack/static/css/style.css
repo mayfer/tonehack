@@ -19,6 +19,7 @@ canvas { display: block; }
 
 .wave-rows { position: relative; border-top: 1px solid #ddd; border-left: 1px solid #ddd; border-right: 1px solid #555; }
 .waves { position: absolute; top: 0; right: 0; width: 20%; background: #fff; }
+.waves.full { position: relative; width: 100%; background: #fff; border-bottom: 1px solid #000; padding: 10px 0; }
 
 .wave-label { font-size: 12px; color: #888; position: absolute; }
 
@@ -37,6 +38,8 @@ canvas { display: block; }
 #piano { margin: 20px 0; }
 
 .container { width: 1000px; margin: 0 auto; }
+.container-medium { width: 800px; margin: 0 auto; }
+.container-narrow { width: 700px; margin: 0 auto; }
             
 a { color: #a50; text-decoration: none; }
 a:hover { color: #b20; }

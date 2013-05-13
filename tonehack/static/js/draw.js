@@ -71,7 +71,7 @@ function stringSubCanvas(waves_canvas, wave, base_freq, wave_height, spacer) {
             return this.current_plot_coordinates;
         }
         
-        this.step = this.speed * time_diff * (Math.PI/20) * this.relative_freq % Math.PI*2;
+        this.step = (this.speed / (base_freq * 2)) * time_diff * (Math.PI/2) % Math.PI*2;
         var volume_envelope_amplitude = this.wave.currentEnvelopeValue(time_diff / this.wave.duration);
         var current_relative_freq = Notes.relative_note(this.relative_freq, this.wave.currentPitchBend(time_diff / this.wave.duration));
         

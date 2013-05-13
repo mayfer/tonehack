@@ -1,13 +1,13 @@
-#article { text-shadow: 0 1px 0 #000; margin-bottom: 50px; }
-#article ul li { margin-bottom: 5px; }
+#article { background: #fff; color: #444; margin: 20px 0; border-top: 2px solid #aaa; border-bottom: 2px solid #aaa;}
 
-#article .box-title, #article .box { font-family: Arial; font-size: 16px; line-height: 1.4em; background: #F6D59C; margin: 0; color: #000; text-shadow: 0 1px 0 rgba(255,255,255,0.7); padding: 20px; }
-#article .box-title { margin: 0; padding: 10px 20px 0 20px; display: inline-block; line-height: 35px; font-size: 25px; border-top-left-radius: 5px; border-top-right-radius: 5px; font-weight: bold; }
-#article .box { border-bottom-right-radius: 5px; border-bottom-left-radius: 5px; border-top-right-radius: 5px; }
+#article h3 {  }
 
-#article h3 { margin: 0 -20px; padding: 0 20px; line-height: 25px; background: rgba(255,255,255,0.3); border-bottom: 1px solid rgba(0,0,0,0.3); border-top: 1px solid #fff; }
+#article .pageflip { text-align: right; line-height: 20px; margin: 10px 0; }
+#article .pageflip .back, #article .pageflip .forward { display: inline-block; height: 20px; width: 20px; border-radius: 25px; background: #eee; border: 2px solid #aaa; text-align: center; }
 
-#article .controls a.start, #article .controls a.pause { color: #a50; border: none; }
+#article .pages { margin: 20px 0;  font-size: 15px; font-family: "Source Sans Pro";}
+
+#article .controls a.start, #article .controls a.pause { color: #a50; background: none; text-shadow: none; border: none; }
 #article .controls a.start:after { content: " Pluck"; }
 #article .controls a.pause:after { content: " Stop"; }
 

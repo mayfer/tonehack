@@ -7,4 +7,15 @@ jQuery.extend({
         }
         return jQuery.extend(true, {}, objThing);
     },
+
+    nextWrap: function() {
+        var $next = this.next();
+        return ($next.length === 0) ? this.siblings().first() : $next;
+    },
+    
+    prevWrap: function() {
+        var $prev = this.prev();
+        return ($prev.length === 0) ? this.siblings().last() : $prev;
+    },
+
 });
