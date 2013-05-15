@@ -131,14 +131,22 @@
                 var white = 0;
                 var black = 0;
 
-                while(white < white_keys.length || black < white_keys.length) {
+            
+                var done = false;
+                while(!done) {
                     var jq_key = $(containing_div).find('#vpcf_key_' + halftone);
                     if(jq_key.hasClass('vpcf_white_key')) {
                         key_bindings[white_keys[white]] = halftone;
                         white++;
+                        if(white > white_keys.length) {
+                            done = true;
+                        }
                     } else {
                         key_bindings[black_keys[black]] = halftone;
                         black++;
+                        if(black > black_keys.length) {
+                            done = true;
+                        }
                     }
 
                     halftone += 1;
@@ -157,8 +165,8 @@
             var bind_keyboard_to_notes = function(halftone) {
                 $(containing_div).find('.keyboard-position .button').removeClass('selected');
                 $(containing_div).find('.keyboard-position .halftone-'+halftone).addClass('selected');
-                
-                $(containing_div).find('.keyboard-label').html('');
+                key_bindings = {}
+                $(containing_div).find('.keyboard-label').remove();
 
                 this.bind_octave(halftone, char_codes_white[0], char_codes_black[0]);
                 this.bind_octave(halftone+12, char_codes_white[1], char_codes_black[1]);
