@@ -81,44 +81,63 @@
         if(settings.keyboard_play == true) {
             
             var char_codes_white = [
-                65, // a
-                83, // s
-                68, // d
-                70, // f
-                71, // g
-                72, // h
-                74, // j
-                75, // k
-                76, // l
+                [
+                    90, // z
+                    88, // x
+                    67, // c
+                    86, // v
+                    66, // b
+                    78, // n
+                    77, // m
+                ], [
+                    81, // q
+                    87, // w
+                    69, // e
+                    82, // r
+                    84, // t
+                    89, // y
+                    85, // u
+                    73, // i
+                    79, // o
+                    80, // p
+                ],
             ];
             var char_codes_black = [
-                87, // w
-                69, // e
-                82, // r
-                84, // t
-                89, // y
-                85, // u
-                73, // i
-                79, // o
-                80, // p
+                [
+                    83, // s
+                    68, // d
+                    70, // f
+                    71, // g
+                    72, // h
+                    74, // j
+                    75, // k
+                    76, // l
+                ], [
+                    50, // 2
+                    51, // 3
+                    52, // 4
+                    53, // 5
+                    54, // 6
+                    55, // 7
+                    56, // 8
+                    57, // 9
+                    48, // 0
+                ]
             ];
 
-            var key_bindings = {};
+            key_bindings = {};
 
-            var bind_keyboard_to_notes = function(halftone) {
-                $(containing_div).find('.keyboard-position .button').removeClass('selected');
-                $(containing_div).find('.keyboard-position .halftone-'+halftone).addClass('selected');
-                key_bindings = {};
-                        
+            bind_octave = function(halftone, white_keys, black_keys) {
                 var white = 0;
                 var black = 0;
-                while(white < char_codes_white.length && black < char_codes_black.length) {
+
+                while(white < white_keys.length || black < white_keys.length) {
                     var jq_key = $(containing_div).find('#vpcf_key_' + halftone);
                     if(jq_key.hasClass('vpcf_white_key')) {
-                        key_bindings[char_codes_white[white]] = halftone;
+                        key_bindings[white_keys[white]] = halftone;
                         white++;
                     } else {
-                        key_bindings[char_codes_black[black]] = halftone;
+                        key_bindings[black_keys[black]] = halftone;
                         black++;
                     }
 
@@ -129,13 +148,21 @@
                         black++;
                     }
                 }
-                $(containing_div).find('.keyboard-label').html('');
                 $.each(key_bindings, function(i, val){
                     var piano_key = $(containing_div).find('#vpcf_key_' + val);
                     piano_key.append($('<div>').addClass('keyboard-label').html(String.fromCharCode(i)));
                 });
             }
             
+            var bind_keyboard_to_notes = function(halftone) {
+                $(containing_div).find('.keyboard-position .button').removeClass('selected');
+                $(containing_div).find('.keyboard-position .halftone-'+halftone).addClass('selected');
+                
+                $(containing_div).find('.keyboard-label').html('');
+
+                this.bind_octave(halftone, char_codes_white[0], char_codes_black[0]);
+                this.bind_octave(halftone+12, char_codes_white[1], char_codes_black[1]);
+            }
         
             // place the keyboard assignment mover
 
