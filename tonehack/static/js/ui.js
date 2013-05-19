@@ -25,7 +25,7 @@ function waveCanvas(jq_elem, freqs) {
 
         if (! window.AudioContext) {
             if (! window.webkitAudioContext) {
-                alert('Sorry, Webkit only. I may have to kindly ask you to switch to Chrome for now.');
+                alert('Tonehack uses the newest Audio APIs that are only supported by Chrome, Safari, and FirefoxNightly.');
                 return;
             }
             window.AudioContext = window.webkitAudioContext;
