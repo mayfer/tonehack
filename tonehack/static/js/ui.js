@@ -418,7 +418,7 @@ function waveCanvas(jq_elem, freqs) {
     }
 
     this.start = function() {
-        jq_elem.find('.controls .start').removeClass('start icon-play').addClass('pause icon-stop');
+        jq_elem.find('.controls .preview.start').removeClass('start icon-play').addClass('pause icon-stop');
         if(this.state != 'running') {
             this.start_time = new Date().getTime();
             this.state = 'running';
@@ -428,7 +428,7 @@ function waveCanvas(jq_elem, freqs) {
     };
 
     this.stop = function() {
-        jq_elem.find('.controls .pause').removeClass('pause icon-stop').addClass('start icon-play');
+        jq_elem.find('.controls .preview.pause').removeClass('pause icon-stop').addClass('start icon-play');
         this.state = 'stopped';
         cancelAnimFrame(this.anim_frame);
         this.resetWavesCanvas();
@@ -543,11 +543,19 @@ function waveCanvas(jq_elem, freqs) {
                     });
                 })
             );
+
+            $('<a>').addClass('record start icon-record').attr('href', '#').appendTo(controls).on('click', function(e){
+                e.preventDefault();
+                $(this).removeClass('start').addClass('working');
+                
+                WavSaver();
+                $(this).removeClass('working').addClass('start');
+            });;
         }
         
         controls.prependTo(jq_elem);
 
-        controls.on('click', '.start, .pause, .stop', function(e){
+        controls.on('click', '.preview.start, .preview.pause, .preview.stop', function(e){
             e.preventDefault();
             if($(this).hasClass('start')) {
                 that.start();
@@ -557,7 +565,7 @@ function waveCanvas(jq_elem, freqs) {
                 that.stop();
             }
         });
-        controls.on('click', '.stop', function(e){
+        controls.on('click', '.preview.stop', function(e){
             e.preventDefault();
             this.state = 'stopped';
         });

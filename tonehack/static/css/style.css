@@ -49,8 +49,10 @@ a:hover { color: #b20; }
             
 .controls { font-size: 14px; line-height: 25px; height: 25px; padding: 0 0 5px 0; }
 .controls .preview { display: inline-block; width: 130px; text-align: left; }
-.controls .start:after { content: " Preview tone"; }
-.controls .pause:after { content: " Stop"; }
+.controls .preview.start:after { content: " Preview tone"; }
+.controls .preview.pause:after { content: " Stop"; }
+.controls .record.start:after { content: " Record"; }
+.controls .record.working:after { content: " Working..."; }
 .controls a { display: inline-block; min-width: 15px; text-align: center; padding: 0 8px; color: #fff; border: none; display: inline-block; text-decoration: none; text-shadow: 0 1px 0 #000; background: #444; border-radius: 2px; }
 .controls a:hover { color: #fff; text-shadow: 0 1px 0 #000, 0 2px 0 #b20; }
 .controls a.tab { float: right; margin-right: 20px;  background: rgba(255,255,255,0.6); position: relative; z-index: 1000;  padding: 0 15px; color: #000; z-index: 5; }
