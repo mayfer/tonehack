@@ -548,7 +548,8 @@ function waveCanvas(jq_elem, freqs) {
                 e.preventDefault();
                 $(this).removeClass('start').addClass('working');
                 
-                WavSaver();
+                var wav = WavSaver();
+                wav.save_test(that.soundwave, 'instrument.wav');
                 $(this).removeClass('working').addClass('start');
             });;
         }

@@ -21,47 +21,64 @@ soundWave = function(context, standing_waves) {
     this.node.onaudioprocess = function(e) { that.process(e) };
 }
 
+soundWave.prototype.getAmplitudeAt = function(counter) {
+    var cumulative_amplitude = 0;
+
+    for (var j = 0; j < this.standing_waves.length; j++) {
+        var wave = this.standing_waves[j];
+
+        var envelope_amplitude = wave.currentEnvelopeValue(counter / (this.sampleRateMillisecond * wave.duration));
+        var pitch_bend = wave.currentPitchBend(counter / (this.sampleRateMillisecond * wave.duration));
+        var current_freq = Notes.relative_note(wave.freq, pitch_bend);
+
+        // square env. amplitude to convert it to a logarithmic scale which better suits our perception
+        var current_amplitude = envelope_amplitude * envelope_amplitude * wave.gain;
+
+        // accumulate wave vals for all tones
+        if(this.xs[j] == undefined) {
+            this.xs[j] = 0;
+        }
+
+        // buffer value for given wave
+        y = Math.sin(this.xs[j] + wave.phase);
+        this.xs[j] += Math.PI * 2 * current_freq / this.sampleRate;
+        
+        cumulative_amplitude += (current_amplitude * y) / this.standing_waves.length;
+        
+    }
+    return cumulative_amplitude;
+}
+
+soundWave.prototype.getFullAudioData = function() {
+    var max_wave_duration = 0;
+    for(var i = 0; i < this.standing_waves.length; i++) {
+        if(this.standing_waves[i].duration > max_wave_duration) {
+            max_wave_duration = this.standing_waves[i].duration;
+        }
+    }
+    var total_samples = max_wave_duration * this.sampleRateMillisecond;
+    var audiodata = new Float32Array(total_samples);
+    for(var j = 0; j < total_samples; j++) {
+        audiodata[j] = this.getAmplitudeAt(j);
+    }
+    return audiodata;
+}
+
 soundWave.prototype.process = function(e) {
     // Get a reference to the output buffer and fill it up.
     var channels = [ e.outputBuffer.getChannelData(0), e.outputBuffer.getChannelData(1) ];
 
-    var wave;
     var step;
-    var current_amplitude;
     var y;
 
     var buffer_size = channels[0].length;
     var num_channels = channels.length;
 
-    var cumulative_amplitude = 0;
-
     var x_increment = Math.PI * 2 / this.sampleRate;
 
+    var cumulative_amplitude = 0;
     for (var i = 0; i < buffer_size; i++) {
-        cumulative_amplitude = 0;
-
-        for (var j = 0; j < this.standing_waves.length; j++) {
-            wave = this.standing_waves[j];
-
-            var envelope_amplitude = wave.currentEnvelopeValue(this.counter / (this.sampleRateMillisecond * wave.duration));
-            var pitch_bend = wave.currentPitchBend(this.counter / (this.sampleRateMillisecond * wave.duration));
-            var current_freq = Notes.relative_note(wave.freq, pitch_bend);
-
-            // square env. amplitude to convert it to a logarithmic scale which better suits our perception
-            current_amplitude = envelope_amplitude * envelope_amplitude * wave.gain;
-
-            // accumulate wave vals for all tones
-            if(this.xs[j] == undefined) {
-                this.xs[j] = 0;
-            }
-
-            // buffer value for given wave
-            y = Math.sin(this.xs[j] + wave.phase);
-            this.xs[j] += Math.PI * 2 * current_freq / this.sampleRate;
-            
-            cumulative_amplitude += (current_amplitude * y) / this.standing_waves.length;
-            
-        }
+        cumulative_amplitude = this.getAmplitudeAt(this.counter);
         if(!this.playing) {
             // fadeout to prevent popping during a pause/stop
             var fadeout_length = 10000;
