@@ -92,8 +92,8 @@ a:hover { color: #b20; }
 .drawing-canvas.active { z-index: 100; opacity: 1; }
 
 #header h1, #header h2 { padding: 0; font-weight: normal; text-align: center; text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #FF8000, 0 0 70px #FF8000, 0 0 80px #FF8000, 0 0 100px #FF8000, 0 0 150px #FF8000; color: #fff; }
-#header h1 { margin: 30px 0 5px 0; font-size: 25px; line-height: 28px; text-align: right; }
-#header h2 { font-size: 16px; line-height: 20px; margin: 0; text-align: right; }
+#header h1 { padding: 30px 0 5px 0; font-size: 25px; line-height: 28px; text-align: right; margin: 0; }
+#header h2 { font-size: 16px; line-height: 20px; margin: 0 0 25px 0; text-align: right; }
 #header h2 span.lt { font-size: 25px; }
 
 .popup { display: none; position: absolute; top: 90px; left: 50%; margin-left: -300px; width: 550px; padding: 20px; background: #ddd; z-index: 500; border-radius: 10px; box-shadow: 0 0 20px 0 #000; border: 5px solid #666; color: #000; padding-top: 60px; }
@@ -124,3 +124,5 @@ a:hover { color: #b20; }
 input, button { font-family: monospace; margin: 0; padding: 0 5px; }
 
 #browse .preset { display: inline-block; padding: 5px 10px; background: rgba(255,255,255,0.8); border-radius: 2px; float: left; white-space:nowrap; margin: 0 5px 5px 0; }
+
+.chrome-experiment { display: block; float: left; margin-top: 10px; }
