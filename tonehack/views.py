@@ -70,6 +70,8 @@ def save(request):
 
     waves = request.POST['waves_json']
     name = request.POST['name'].strip()
+    if name == '':
+        name = 'something'
     orig_urlid = re.sub(r'\W+', '-', name)
     urlid = orig_urlid
 
