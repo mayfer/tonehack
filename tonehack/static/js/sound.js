@@ -15,8 +15,11 @@ soundWave = function(context, standing_waves) {
 
     this.standing_waves = standing_waves;
 
-    this.node = context.createJavaScriptNode(1024, 1, 2);
-
+    if(context.createJavaScriptNode) {
+        this.node = context.createJavaScriptNode(1024, 1, 2);
+    } else {
+        this.node = context.createScriptProcessor(1024, 1, 2);
+    }
     var that = this;
     this.node.onaudioprocess = function(e) { that.process(e) };
 }
