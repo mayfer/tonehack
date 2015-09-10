@@ -67,11 +67,13 @@ a:hover { color: #b20; }
 
 .adsr-link canvas { position: absolute; top: 0; left: 0; }
             
-.action-buttons { position: absolute; top: 5px; left: 10px; }
+.action-buttons { position: absolute; top: 5px; left: 10px;  right: 10px; bottom: 10px; }
 .setting { font-size: 12px; line-height: 16px; padding: 0 3px; }
 .action-buttons a { background: #ddd; border-radius: 2px; }
 .action-buttons a:hover { background: #fff; }
 .action-buttons a span { display: inline-block; line-height: 10px; width: 10px; background: #fff; border-radius: 5px; color: #777; text-align: center; }
+
+.setting.save-wav { position: absolute; top: 5px; right: 0px; }
 
 .all-durations { position: absolute; bottom: 10px; left: 10px; }
 .envelope-switcher { position: absolute; bottom: 10px; left: 350px; }

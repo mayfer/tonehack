@@ -2,6 +2,8 @@ var VOLUME_ENV_COLOR = '#aa6600';
 var FREQ_ENV_COLOR = '#00aa00';
 
 function waveCanvas(jq_elem, freqs) {
+    var self = this;
+    
     this.freqs = freqs;
     this.jq_elem = jq_elem;
     this.start_time = new Date().getTime();
@@ -205,6 +207,17 @@ function waveCanvas(jq_elem, freqs) {
                 that.saveWaves();
             }
         );
+        var add_tone = $('<a>').addClass('save-wav setting')
+            .attr('href', '#')
+            .html('<span>&darr;</span> Save as .wav file')
+            .appendTo(action_buttons)
+            .on('click', function(e){
+                e.preventDefault();
+                var duration = parseInt(prompt("How long should the recording be? Enter a number in seconds."));
+                if(duration > 0) {
+                    self.saveWav(duration);
+                }
+            });
 
         this.wave_rows.bind('mouseup', function(e) {
             that.saveWaves();
@@ -390,6 +403,10 @@ function waveCanvas(jq_elem, freqs) {
         });
         this.soundwave = new soundWave(this.audio_context, this.waves);
 
+    }
+
+    this.saveWav = function(duration) {
+        saveSoundWaves(this.soundwave, duration);
     }
 
     this.drawFrame = function() {
