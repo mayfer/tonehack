@@ -207,13 +207,20 @@ function waveCanvas(jq_elem, freqs) {
                 that.saveWaves();
             }
         );
-        var add_tone = $('<a>').addClass('save-wav setting')
+        var save_wav = $('<a>').addClass('save-wav setting')
             .attr('href', '#')
             .html('<span>&darr;</span> Save as .wav file')
             .appendTo(action_buttons)
             .on('click', function(e){
                 e.preventDefault();
-                var duration = parseInt(prompt("How long should the recording be? Enter a number in seconds."));
+
+                var default_duration = 0;
+                for(var i=0; i<self.waves.length; i++) {
+                    if(default_duration < self.waves[i].duration) {
+                        default_duration = self.waves[i].duration;
+                    }
+                }
+                var duration = parseInt(prompt("How long should the recording be? Enter a number in milliseconds.\n\n(e.g. 1000 for 1 second)", default_duration));
                 if(duration > 0) {
                     self.saveWav(duration);
                 }
