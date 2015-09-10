@@ -66,7 +66,7 @@ function makeWav(audiodata, sampleRate) {
 }
 
 function saveSoundWaves(soundWave, duration) {
-    var buffer_size = duration * soundWave.sampleRate;
+    var buffer_size = duration * soundWave.sampleRate / 1000;
     var channels = [ new Float32Array(buffer_size), new Float32Array(buffer_size) ];
 
     var wave;
