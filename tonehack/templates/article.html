@@ -17,14 +17,14 @@
         <script type='text/javascript'>
 
             $(document).ready(function() {
-                var options = {details: false, wave_height: 60, audio_context: new webkitAudioContext() };
+                var options = {details: false, wave_height: 60, audio_context: new AudioContext() };
                 var simple_string = new waveCanvas($('#simple-string'), presets['Pure tone']).init(options);
 
-                var options = {details: false, wave_height: 30, audio_context: new webkitAudioContext() };
+                var options = {details: false, wave_height: 30, audio_context: new AudioContext() };
                 var resonant_string = new waveCanvas($('#resonant-string'), presets['Resonant']).init(options);
                 var decaying_overtones = new waveCanvas($('#decaying-overtones'), presets['Fake string']).init(options)
 
-                var options = {details: false, wave_height: 30, audio_context: new webkitAudioContext() };
+                var options = {details: false, wave_height: 30, audio_context: new AudioContext() };
                 var individually_decaying_overtones = new waveCanvas($('#individually-decaying-overtones'), presets['Guitar']).init(options)
                 
                 
