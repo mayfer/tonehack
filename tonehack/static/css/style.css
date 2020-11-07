@@ -21,7 +21,7 @@ canvas { display: block; }
 
 .wave-rows { position: relative;  }
 .waves { position: absolute; top: 0; right: 0; width: 20%; background: #fff; }
-.waves.full { position: relative; width: 100%; background: #fff; border-bottom: 1px solid #000; padding: 10px 0; }
+.waves.full { position: relative; width: 100%; background: #fff;  padding: 10px 0; }
 
 .wave-label { font-size: 12px; color: #888; position: absolute; }
 

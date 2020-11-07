@@ -17,7 +17,7 @@
         <script type='text/javascript'>
 
             $(document).ready(function() {
-                var audio_context = window.webkitAudioContext ? window.webkitAudioContext : window.AudioContext();
+                var audio_context = window.webkitAudioContext ? window.webkitAudioContext : window.AudioContext;
                 var options = {details: false, wave_height: 60, audio_context: new audio_context() };
                 var simple_string = new waveCanvas($('#simple-string'), presets['Pure tone']).init(options);
 

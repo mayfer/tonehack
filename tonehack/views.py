@@ -49,6 +49,10 @@ def article(request):
     response = {}
     return template_response('article.html', response, request)
 
+def violin(request):
+    response = {}
+    return template_response('violin.html', response, request)
+
 def browse(request):
     presets = Instrument.objects.all()
     response = {

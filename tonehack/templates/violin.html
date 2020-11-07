@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block head %}
+        <!-- default waves to load -->
+        <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'>
+        <script type='text/javascript'>
+            presets = {};
+            presets['Pure tone'] = [{'freq': 220, 'duration': 1000, 'volume_envelope': [1]}];
+            presets['Resonant'] = [
+                {'freq': 110*1, 'duration': 1000, 'volume_envelope': [1]},
+                {'freq': 110*2, 'duration': 1000, 'volume_envelope': [1]},
+                {'freq': 110*3, 'duration': 1000, 'volume_envelope': [1]},
+                {'freq': 110*4, 'duration': 1000, 'volume_envelope': [1]},
+                {'freq': 110*5, 'duration': 1000, 'volume_envelope': [1]},
+                {'freq': 110*6, 'duration': 1000, 'volume_envelope': [1]},
+                {'freq': 110*7, 'duration': 1000, 'volume_envelope': [1]},
+
+            ];
+        </script>
+        <script type='text/javascript' src='{{ STATIC_URL }}js/presets/guitar.js'></script>
+        <script type='text/javascript' src='{{ STATIC_URL }}js/presets/fake_string.js'></script>
+        <script type='text/javascript'>
+
+            $(document).ready(function() {
+                var audio_context = window.webkitAudioContext ? window.webkitAudioContext : window.AudioContext;
+                var options = {base_freq: 110, superposed: true, details: false, wave_height: 35, audio_context: new audio_context() };
+                var resonant_string = new waveCanvas($('#resonant-string'), presets['Resonant']).init(options);
+                var superposed = new superposedStringCanvas($('#superposed-string'), presets['Resonant'], 300).init(options);
+                
+                resonant_string.setLabel('Combining the vibrations of the first four overtones');
+            });
+
+        </script>
+{% endblock %}
+{% block fullwidth_content %}
+    <div id='article'>
+        <div class='container-narrow' style="width: 1000px; font-family: 'Source Sans Pro'; margin-bottom: 100px;">
+            <div style="text-align: center; font-size: 1.4em;">
+                <h3>Violin string behavior from simple sine waves</h3>
+                <p>Hit "Play" and compare it to the slow motion violin string in the video.</p>
+            </div>
+            <div  style='width: 450px; display: inline-block; vertical-align: top;'>
+                <p>The <strong>top row</strong> shows the <strong>superposition</strong> of all the overtones of a regular string, shown below.</p>
+                <div id='resonant-string' class='string'></div>
+            </div>
+            <div class="video" style="display: inline-block; width: 300px; margin-left: 50px;">
+                <iframe width="450" height="300" src="https://www.youtube.com/embed/6JeyiM0YNo4?start=59" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
+{% endblock %}
